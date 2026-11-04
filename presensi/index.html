@@ -338,13 +338,18 @@
         <!-- MODAL / LIGHTBOX GAMBAR (POP-UP ZOOM) -->
         <div id="imageModal" class="fixed inset-0 z-[100] bg-black/95 hidden flex-col items-center justify-center p-4 transition-opacity duration-300 opacity-0" onclick="closeModal(event)">
             <!-- Tombol Close Modal -->
-            <button class="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white bg-black/50 p-2 rounded-full backdrop-blur-sm transition-colors cursor-pointer" onclick="closeModal(event, true)">
-                <i data-lucide="x" class="w-6 h-6"></i>
+            <button type="button" id="closeModalBtn" aria-label="Tutup" title="Tutup" class="absolute z-50 top-4 right-4 md:top-6 md:right-6 flex items-center gap-1.5 text-white hover:text-white bg-black/60 hover:bg-black/80 border border-white/30 pl-3 pr-2.5 py-2 rounded-full backdrop-blur-sm transition-colors cursor-pointer" onclick="closeModal(event, true)">
+                <span class="text-xs font-semibold">Tutup</span>
+                <!-- Ikon X (SVG inline agar selalu tampil) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
             </button>
             
             <!-- Area Gambar -->
-            <div class="relative w-full max-w-3xl flex items-center justify-center h-full" onclick="event.stopPropagation()">
-                <img id="modalImage" src="" alt="Zoom Gambar" class="max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl transition-transform duration-300 transform scale-95">
+            <div class="relative z-10 w-full max-w-3xl flex items-center justify-center h-full pointer-events-none">
+                <img id="modalImage" src="" alt="Zoom Gambar" class="pointer-events-auto max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl transition-transform duration-300 transform scale-95" onclick="event.stopPropagation()">
             </div>
         </div>
 
@@ -365,6 +370,7 @@
         function openModal(src) {
             modalImg.src = src;
             modal.classList.remove('hidden');
+            modal.classList.add('flex');
             
             // Sedikit delay (timeout) agar efek transisi pop-up dapat berjalan
             setTimeout(() => {
@@ -387,12 +393,20 @@
                 
                 // Tunggu transisi selesai sebelum di-hide
                 setTimeout(() => {
+                    modal.classList.remove('flex');
                     modal.classList.add('hidden');
                     modalImg.src = '';
                     document.body.style.overflow = 'auto'; // Kembalikan scroll halaman belakang
                 }, 300);
             }
         }
+
+        // Tutup modal dengan tombol Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal(e, true);
+            }
+        });
     </script>
 </body>
 </html>
