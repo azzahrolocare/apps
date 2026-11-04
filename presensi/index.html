@@ -52,29 +52,6 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* Efek 3D Mockup & Pantulan Cahaya Layar */
-        .phone-3d-frame {
-            background: linear-gradient(135deg, #334155 0%, #0f172a 100%);
-            box-shadow: 
-                0 15px 35px -5px rgba(0, 0, 0, 0.25),
-                0 5px 15px rgba(0, 0, 0, 0.1),
-                inset 0 1px 2px rgba(255, 255, 255, 0.3),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.8);
-            transform: perspective(1000px) rotateY(-2deg);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .phone-3d-frame:hover {
-            transform: perspective(1000px) rotateY(0deg) translateY(-4px);
-            box-shadow: 
-                0 20px 40px -5px rgba(15, 81, 50, 0.2),
-                0 10px 20px rgba(0, 0, 0, 0.15),
-                inset 0 1px 2px rgba(255, 255, 255, 0.4),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.8);
-        }
-        .screen-reflection {
-            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%);
-            pointer-events: none;
-        }
     </style>
 </head>
 <body class="bg-[#f8fafc] min-h-screen text-gray-800 antialiased overflow-y-auto">
@@ -171,7 +148,7 @@
                     </div>
                 </div>
 
-                <!-- MOCKUP SLIDER PREVIEW APLIKASI -->
+                <!-- TAMPILAN GAMBAR PREVIEW APLIKASI (DENGAN FITUR KLIK UNTUK ZOOM) -->
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="flex items-center gap-2">
@@ -180,56 +157,40 @@
                                 Tangkapan Layar Aplikasi
                             </h3>
                         </div>
-                        <span class="text-[10px] text-slate-400">Geser ke samping &rarr;</span>
+                        <span class="text-[10px] text-slate-400">Ketuk gambar untuk perbesar</span>
                     </div>
 
                     <!-- Horizontal Scroll Container -->
-                    <div class="flex gap-5 overflow-x-auto no-scrollbar pb-4 pt-3 px-2 snap-x snap-mandatory">
+                    <div class="flex gap-4 overflow-x-auto no-scrollbar pb-3 pt-2 px-1 snap-x snap-mandatory">
                         
-                        <!-- Mockup 1: Scan QR Code -->
-                        <div class="flex-shrink-0 w-44 snap-center space-y-2.5 text-center">
-                            <div class="phone-3d-frame relative p-1.5 rounded-[1.2rem]">
-                                <div class="absolute top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-black rounded-full z-20 border border-slate-700"></div>
-                                <div class="overflow-hidden rounded-[0.9rem] bg-slate-100 aspect-[9/19.5] relative">
-                                    <img src="Mode_Presensi_Scan_QRcode.jpg" alt="Scan QR Code" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 screen-reflection"></div>
-                                </div>
+                        <!-- Gambar 1: Scan QR Code -->
+                        <div class="flex-shrink-0 w-44 snap-center space-y-2 text-center">
+                            <div class="overflow-hidden rounded-xl bg-slate-100 border border-slate-200 shadow-sm">
+                                <img src="Mode_Presensi_Scan_QRcode.png" alt="Scan QR Code" class="w-full h-auto object-cover cursor-zoom-in hover:opacity-90 transition-opacity duration-200" onclick="openModal(this.src)">
                             </div>
                             <span class="block text-[11px] font-semibold text-slate-700">Scan QR Code</span>
                         </div>
 
-                        <!-- Mockup 2: Presensi Manual -->
-                        <div class="flex-shrink-0 w-44 snap-center space-y-2.5 text-center">
-                            <div class="phone-3d-frame relative p-1.5 rounded-[1.2rem]">
-                                <div class="absolute top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-black rounded-full z-20 border border-slate-700"></div>
-                                <div class="overflow-hidden rounded-[0.9rem] bg-slate-100 aspect-[9/19.5] relative">
-                                    <img src="Mode_Presensi_Manual.jpg" alt="Presensi Manual" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 screen-reflection"></div>
-                                </div>
+                        <!-- Gambar 2: Presensi Manual -->
+                        <div class="flex-shrink-0 w-44 snap-center space-y-2 text-center">
+                            <div class="overflow-hidden rounded-xl bg-slate-100 border border-slate-200 shadow-sm">
+                                <img src="Mode_Presensi_Manual.png" alt="Presensi Manual" class="w-full h-auto object-cover cursor-zoom-in hover:opacity-90 transition-opacity duration-200" onclick="openModal(this.src)">
                             </div>
                             <span class="block text-[11px] font-semibold text-slate-700">Presensi Manual</span>
                         </div>
 
-                        <!-- Mockup 3: Antrean Offline -->
-                        <div class="flex-shrink-0 w-44 snap-center space-y-2.5 text-center">
-                            <div class="phone-3d-frame relative p-1.5 rounded-[1.2rem]">
-                                <div class="absolute top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-black rounded-full z-20 border border-slate-700"></div>
-                                <div class="overflow-hidden rounded-[0.9rem] bg-slate-100 aspect-[9/19.5] relative">
-                                    <img src="Data_Antrean_Offline.jpg" alt="Antrean Offline" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 screen-reflection"></div>
-                                </div>
+                        <!-- Gambar 3: Antrean Offline -->
+                        <div class="flex-shrink-0 w-44 snap-center space-y-2 text-center">
+                            <div class="overflow-hidden rounded-xl bg-slate-100 border border-slate-200 shadow-sm">
+                                <img src="Data_Antrean_Offline.png" alt="Antrean Offline" class="w-full h-auto object-cover cursor-zoom-in hover:opacity-90 transition-opacity duration-200" onclick="openModal(this.src)">
                             </div>
                             <span class="block text-[11px] font-semibold text-slate-700">Antrean Offline</span>
                         </div>
 
-                        <!-- Mockup 4: Rekapitulasi Presensi (HP PORTRAIT, GAMBAR LANDSCAPE DIPUTAR) -->
-                        <div class="flex-shrink-0 w-44 snap-center space-y-2.5 text-center">
-                            <div class="phone-3d-frame relative p-1.5 rounded-[1.2rem]">
-                                <div class="absolute top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-black rounded-full z-20 border border-slate-700"></div>
-                                <div class="overflow-hidden rounded-[0.9rem] bg-slate-100 aspect-[9/19.5] relative flex items-center justify-center">
-                                    <img src="Rekapitulasi_Presensi.jpg" alt="Rekapitulasi Presensi" class="w-full h-full object-cover transform rotate-90 scale-[1.75]">
-                                    <div class="absolute inset-0 screen-reflection"></div>
-                                </div>
+                        <!-- Gambar 4: Rekapitulasi Presensi -->
+                        <div class="flex-shrink-0 w-44 snap-center space-y-2 text-center">
+                            <div class="overflow-hidden rounded-xl bg-slate-100 border border-slate-200 shadow-sm">
+                                <img src="Rekapitulasi_Presensi.png" alt="Rekapitulasi Presensi" class="w-full h-auto object-cover cursor-zoom-in hover:opacity-90 transition-opacity duration-200" onclick="openModal(this.src)">
                             </div>
                             <span class="block text-[11px] font-semibold text-slate-700">Rekapitulasi Presensi</span>
                         </div>
@@ -366,7 +327,7 @@
         </footer>
 
         <!-- Bottom Bar Download Melayang (Mobile Only) -->
-        <div class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 px-4 shadow-2xl md:hidden">
+        <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 px-4 shadow-2xl md:hidden">
             <a href="https://azzahro.web.id/apps/download/Presensi_Az-Zahro_Terbaru_v1.0.10.apk" 
                class="flex items-center justify-center gap-2 w-full py-3 bg-emerald-deep hover:bg-emerald-medium active:scale-[0.98] text-white font-bold text-xs rounded-xl shadow-md transition-all">
                 <i data-lucide="download" class="w-4 h-4 text-gold-accent"></i>
@@ -374,12 +335,64 @@
             </a>
         </div>
 
+        <!-- MODAL / LIGHTBOX GAMBAR (POP-UP ZOOM) -->
+        <div id="imageModal" class="fixed inset-0 z-[100] bg-black/95 hidden flex-col items-center justify-center p-4 transition-opacity duration-300 opacity-0" onclick="closeModal(event)">
+            <!-- Tombol Close Modal -->
+            <button class="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white bg-black/50 p-2 rounded-full backdrop-blur-sm transition-colors cursor-pointer" onclick="closeModal(event, true)">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <!-- Area Gambar -->
+            <div class="relative w-full max-w-3xl flex items-center justify-center h-full" onclick="event.stopPropagation()">
+                <img id="modalImage" src="" alt="Zoom Gambar" class="max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl transition-transform duration-300 transform scale-95">
+            </div>
+        </div>
+
     </div>
 
+    <!-- SCRIPT JAVASCRIPT -->
     <script>
+        // Inisialisasi Icon Lucide
         window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
         });
+
+        // Logika Modal/Lightbox Zoom Gambar
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+
+        // Buka Modal
+        function openModal(src) {
+            modalImg.src = src;
+            modal.classList.remove('hidden');
+            
+            // Sedikit delay (timeout) agar efek transisi pop-up dapat berjalan
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalImg.classList.remove('scale-95');
+                modalImg.classList.add('scale-100');
+            }, 10);
+            
+            // Sembunyikan scroll halaman belakang saat modal terbuka
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Tutup Modal
+        function closeModal(event, force = false) {
+            // Tutup jika tombol 'X' ditekan atau jika user mengklik bagian luar gambar (background gelap)
+            if (force || event.target === modal) {
+                modal.classList.add('opacity-0');
+                modalImg.classList.remove('scale-100');
+                modalImg.classList.add('scale-95');
+                
+                // Tunggu transisi selesai sebelum di-hide
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modalImg.src = '';
+                    document.body.style.overflow = 'auto'; // Kembalikan scroll halaman belakang
+                }, 300);
+            }
+        }
     </script>
 </body>
 </html>
