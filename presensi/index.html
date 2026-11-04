@@ -117,52 +117,14 @@
 
                     <!-- Tombol Download Utama -->
                     <div class="space-y-2 pt-2 border-t border-slate-100">
-                        <a id="mainDownloadBtn" href="https://azzahro.web.id/apps/download/Presensi_Az-Zahro_Terbaru_v1.0.10.apk"
-                           class="js-apk-download flex items-center justify-center gap-2.5 w-full py-3.5 bg-emerald-deep hover:bg-emerald-medium active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-md transition-all duration-200">
+                        <a href="https://azzahro.web.id/apps/download/Presensi_Az-Zahro_Terbaru_v1.0.10.apk" 
+                           class="flex items-center justify-center gap-2.5 w-full py-3.5 bg-emerald-deep hover:bg-emerald-medium active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-md transition-all duration-200">
                             <i data-lucide="download" class="w-5 h-5 text-gold-accent"></i>
-                            <span id="mainLabel">Unduh File APK (v1.0.10)</span>
+                            Unduh File APK (v1.0.10)
                         </a>
-                        <p id="downloadHint" class="text-[10px] text-center text-slate-400">
+                        <p class="text-[10px] text-center text-slate-400">
                             Klik tombol di atas untuk memulai unduhan secara langsung
                         </p>
-
-                        <!-- PANEL PROGRES UNDUHAN (tetap di halaman) -->
-                        <div id="downloadPanel" class="hidden mt-3 p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3" aria-live="polite">
-                            <div class="flex items-center justify-between gap-2">
-                                <div class="flex items-center gap-2 min-w-0">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-deep flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                                    <span id="dlStatus" class="text-xs font-bold text-slate-800 truncate">Menyiapkan unduhan...</span>
-                                </div>
-                                <span id="dlPercent" class="text-xs font-bold text-emerald-deep tabular-nums">0%</span>
-                            </div>
-
-                            <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
-                                <div id="dlBar" class="h-full w-0 bg-emerald-deep rounded-full transition-all duration-200"></div>
-                            </div>
-
-                            <div class="flex items-center justify-between text-[10px] text-slate-500">
-                                <span id="dlSize">0 MB</span>
-                                <span id="dlSpeed"></span>
-                            </div>
-
-                            <!-- Tombol Batal (saat mengunduh) -->
-                            <button type="button" id="dlCancelBtn" class="hidden w-full py-2 text-xs font-semibold text-rose-600 border border-rose-200 bg-white hover:bg-rose-50 rounded-lg transition-colors">
-                                Batalkan Unduhan
-                            </button>
-
-                            <!-- Tombol Instal (setelah unduhan selesai) -->
-                            <a id="dlInstallBtn" href="#" download="Presensi_Az-Zahro_Terbaru_v1.0.10.apk" class="hidden flex items-center justify-center gap-2 w-full py-3 bg-gold-accent hover:bg-gold-muted text-emerald-deep font-bold text-sm rounded-xl shadow-md transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Instal Aplikasi Sekarang
-                            </a>
-
-                            <!-- Tombol Coba Lagi (jika gagal) -->
-                            <button type="button" id="dlRetryBtn" class="hidden w-full py-2.5 text-xs font-bold text-white bg-emerald-deep hover:bg-emerald-medium rounded-lg transition-colors">
-                                Coba Lagi
-                            </button>
-
-                            <p id="dlHelp" class="hidden text-[11px] text-slate-600 leading-relaxed"></p>
-                        </div>
                     </div>
 
                     <!-- Ringkasan Info Aplikasi / Spesifikasi -->
@@ -366,10 +328,10 @@
 
         <!-- Bottom Bar Download Melayang (Mobile Only) -->
         <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 px-4 shadow-2xl md:hidden">
-            <a id="stickyDownloadBtn" href="https://azzahro.web.id/apps/download/Presensi_Az-Zahro_Terbaru_v1.0.10.apk"
-               class="js-apk-download flex items-center justify-center gap-2 w-full py-3 bg-emerald-deep hover:bg-emerald-medium active:scale-[0.98] text-white font-bold text-xs rounded-xl shadow-md transition-all">
+            <a href="https://azzahro.web.id/apps/download/Presensi_Az-Zahro_Terbaru_v1.0.10.apk" 
+               class="flex items-center justify-center gap-2 w-full py-3 bg-emerald-deep hover:bg-emerald-medium active:scale-[0.98] text-white font-bold text-xs rounded-xl shadow-md transition-all">
                 <i data-lucide="download" class="w-4 h-4 text-gold-accent"></i>
-                <span id="stickyLabel">Unduh Aplikasi APK (v1.0.10)</span>
+                Unduh Aplikasi APK (v1.0.10)
             </a>
         </div>
 
@@ -385,6 +347,23 @@
                 </svg>
             </button>
             
+            <!-- Tombol Geser Sebelumnya -->
+            <button type="button" id="prevImgBtn" aria-label="Gambar sebelumnya" title="Sebelumnya" class="absolute z-50 left-2 md:left-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-11 h-11 text-white bg-black/60 hover:bg-black/80 border border-white/30 rounded-full backdrop-blur-sm transition-colors cursor-pointer" onclick="event.stopPropagation(); showPrevImage();">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+
+            <!-- Tombol Geser Selanjutnya -->
+            <button type="button" id="nextImgBtn" aria-label="Gambar selanjutnya" title="Selanjutnya" class="absolute z-50 right-2 md:right-6 top-1/2 -translate-y-1/2 flex items-center justify-center w-11 h-11 text-white bg-black/60 hover:bg-black/80 border border-white/30 rounded-full backdrop-blur-sm transition-colors cursor-pointer" onclick="event.stopPropagation(); showNextImage();">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+
+            <!-- Indikator Posisi Gambar -->
+            <div id="imgCounter" class="absolute z-50 bottom-5 left-1/2 -translate-x-1/2 text-white text-xs font-semibold bg-black/60 border border-white/30 px-3 py-1 rounded-full backdrop-blur-sm"></div>
+
             <!-- Area Gambar -->
             <div class="relative z-10 w-full max-w-3xl flex items-center justify-center h-full pointer-events-none">
                 <img id="modalImage" src="" alt="Zoom Gambar" class="pointer-events-auto max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl transition-transform duration-300 transform scale-95" onclick="event.stopPropagation()">
@@ -404,9 +383,52 @@
         const modal = document.getElementById('imageModal');
         const modalImg = document.getElementById('modalImage');
 
+        // Daftar gambar galeri & indeks aktif (untuk fitur geser)
+        const galleryImages = Array.from(document.querySelectorAll('img[onclick^="openModal"]'));
+        let currentIndex = 0;
+
+        function updateModalImage() {
+            modalImg.src = galleryImages[currentIndex].src;
+            modalImg.alt = galleryImages[currentIndex].alt;
+            document.getElementById('imgCounter').textContent = (currentIndex + 1) + ' / ' + galleryImages.length;
+        }
+
+        function showNextImage() {
+            currentIndex = (currentIndex + 1) % galleryImages.length;
+            updateModalImage();
+        }
+
+        function showPrevImage() {
+            currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+            updateModalImage();
+        }
+
+        // Geser (swipe) dengan sentuhan
+        let touchStartX = 0, touchStartY = 0;
+        modal.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].clientX;
+            touchStartY = e.changedTouches[0].clientY;
+        }, { passive: true });
+        modal.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                if (dx < 0) showNextImage(); else showPrevImage();
+            }
+        }, { passive: true });
+
+        // Navigasi dengan tombol panah keyboard
+        document.addEventListener('keydown', (e) => {
+            if (modal.classList.contains('hidden')) return;
+            if (e.key === 'ArrowRight') showNextImage();
+            if (e.key === 'ArrowLeft') showPrevImage();
+        });
+
         // Buka Modal
         function openModal(src) {
-            modalImg.src = src;
+            const idx = galleryImages.findIndex(img => img.src === src);
+            currentIndex = idx >= 0 ? idx : 0;
+            updateModalImage();
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             
@@ -445,153 +467,6 @@
                 closeModal(e, true);
             }
         });
-
-        // ===== UNDUHAN APK DENGAN INDIKATOR PROGRES DI HALAMAN =====
-        const APK_URL = 'https://azzahro.web.id/apps/download/Presensi_Az-Zahro_Terbaru_v1.0.10.apk';
-        const APK_NAME = 'Presensi_Az-Zahro_Terbaru_v1.0.10.apk';
-
-        const $ = (id) => document.getElementById(id);
-        const dlPanel = $('downloadPanel');
-        const dlStatus = $('dlStatus');
-        const dlPercent = $('dlPercent');
-        const dlBar = $('dlBar');
-        const dlSize = $('dlSize');
-        const dlSpeed = $('dlSpeed');
-        const dlCancelBtn = $('dlCancelBtn');
-        const dlInstallBtn = $('dlInstallBtn');
-        const dlRetryBtn = $('dlRetryBtn');
-        const dlHelp = $('dlHelp');
-        const mainLabel = $('mainLabel');
-        const stickyLabel = $('stickyLabel');
-        const downloadHint = $('downloadHint');
-
-        let dlState = 'idle'; // idle | downloading | done | error
-        let dlController = null;
-        let apkObjectUrl = null;
-
-        function setLabels(text) {
-            mainLabel.textContent = text;
-            stickyLabel.textContent = text;
-        }
-        function show(el) { el.classList.remove('hidden'); }
-        function hide(el) { el.classList.add('hidden'); }
-        function fmtMB(bytes) { return (bytes / 1048576).toFixed(1) + ' MB'; }
-
-        async function startApkDownload() {
-            if (dlState === 'downloading') return;
-
-            dlState = 'downloading';
-            dlController = new AbortController();
-            show(dlPanel);
-            hide(dlInstallBtn); hide(dlRetryBtn); hide(dlHelp);
-            show(dlCancelBtn);
-            hide(downloadHint);
-            dlStatus.textContent = 'Sedang mengunduh...';
-            dlPercent.textContent = '0%';
-            dlBar.style.width = '0%';
-            dlBar.classList.remove('bg-rose-500');
-            dlBar.classList.add('bg-emerald-deep');
-            dlSize.textContent = '0 MB';
-            dlSpeed.textContent = '';
-            setLabels('Mengunduh... 0%');
-            dlPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            try {
-                const res = await fetch(APK_URL, { signal: dlController.signal });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-
-                const total = parseInt(res.headers.get('Content-Length') || '0', 10);
-                const reader = res.body.getReader();
-                const chunks = [];
-                let received = 0;
-                const t0 = performance.now();
-                let lastUi = 0;
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    chunks.push(value);
-                    received += value.length;
-
-                    const now = performance.now();
-                    if (now - lastUi > 100) {
-                        lastUi = now;
-                        const pct = total ? Math.min(100, Math.round((received / total) * 100)) : null;
-                        if (pct !== null) {
-                            dlBar.style.width = pct + '%';
-                            dlPercent.textContent = pct + '%';
-                            setLabels('Mengunduh... ' + pct + '%');
-                            dlSize.textContent = fmtMB(received) + ' / ' + fmtMB(total);
-                        } else {
-                            dlPercent.textContent = '';
-                            dlBar.style.width = '60%';
-                            dlBar.classList.add('animate-pulse');
-                            setLabels('Mengunduh... ' + fmtMB(received));
-                            dlSize.textContent = fmtMB(received);
-                        }
-                        const secs = (now - t0) / 1000;
-                        if (secs > 0.5) dlSpeed.textContent = (received / 1048576 / secs).toFixed(2) + ' MB/detik';
-                    }
-                }
-
-                const blob = new Blob(chunks, { type: 'application/vnd.android.package-archive' });
-                if (apkObjectUrl) URL.revokeObjectURL(apkObjectUrl);
-                apkObjectUrl = URL.createObjectURL(blob);
-
-                dlState = 'done';
-                dlBar.classList.remove('animate-pulse');
-                dlBar.style.width = '100%';
-                dlPercent.textContent = '100%';
-                dlSize.textContent = fmtMB(blob.size);
-                dlSpeed.textContent = '';
-                dlStatus.textContent = 'Unduhan selesai!';
-                setLabels('Unduhan Selesai - Instal Sekarang');
-                hide(dlCancelBtn);
-
-                dlInstallBtn.href = apkObjectUrl;
-                dlInstallBtn.setAttribute('download', APK_NAME);
-                show(dlInstallBtn);
-
-                dlHelp.textContent = 'Ketuk "Instal Aplikasi Sekarang", lalu buka file yang tersimpan (lewat notifikasi unduhan atau aplikasi File Manager). Jika diminta, izinkan "Instal dari sumber ini" pada pengaturan Android.';
-                show(dlHelp);
-            } catch (err) {
-                dlBar.classList.remove('animate-pulse');
-                hide(dlCancelBtn);
-
-                if (err && err.name === 'AbortError') {
-                    dlState = 'idle';
-                    hide(dlPanel);
-                    show(downloadHint);
-                    setLabels('Unduh File APK (v1.0.10)');
-                    return;
-                }
-
-                // Gagal (misalnya diblokir CORS / koneksi putus)
-                dlState = 'error';
-                dlStatus.textContent = 'Unduhan gagal';
-                dlBar.classList.remove('bg-emerald-deep');
-                dlBar.classList.add('bg-rose-500');
-                dlHelp.innerHTML = 'Koneksi terputus atau server tidak merespons. Ketuk "Coba Lagi", atau <a class="underline font-semibold text-emerald-deep" href="' + APK_URL + '">unduh langsung lewat browser</a>.';
-                show(dlHelp);
-                show(dlRetryBtn);
-                setLabels('Coba Unduh Lagi');
-            }
-        }
-
-        function handleDownloadClick(e) {
-            e.preventDefault();
-            if (dlState === 'downloading') {
-                dlPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else if (dlState === 'done' && apkObjectUrl) {
-                dlInstallBtn.click(); // simpan/instal file yang sudah diunduh
-            } else {
-                startApkDownload();
-            }
-        }
-
-        document.querySelectorAll('.js-apk-download').forEach((el) => el.addEventListener('click', handleDownloadClick));
-        dlRetryBtn.addEventListener('click', startApkDownload);
-        dlCancelBtn.addEventListener('click', () => { if (dlController) dlController.abort(); });
     </script>
 </body>
 </html>
