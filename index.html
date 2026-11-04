@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0F5132">
+    <title>Pembaruan Presensi Terbaru - SMP & SMK Az-Zahro</title>
+    
+    <!-- Integrasi Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            deep: '#0F5132',
+                            medium: '#146c43',
+                            light: '#d1e7dd',
+                            soft: '#f0fdf4'
+                        },
+                        gold: {
+                            accent: '#D4AF37',
+                            muted: '#c5a059',
+                            light: '#fbf7eb'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-serif-custom {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+    </style>
+</head>
+<body class="bg-[#f8fafc] min-h-screen text-gray-800 antialiased overflow-y-auto">
+
+    <!-- Container Utama Full Screen -->
+    <div class="w-full min-h-screen bg-[#f8fafc] flex flex-col justify-between relative overflow-x-hidden">
+        
+        <div>
+            <!-- Navigasi Utama -->
+            <nav class="sticky top-0 z-40 bg-emerald-deep/95 backdrop-blur-md shadow-md border-b border-emerald-medium/30 text-white px-4 py-4">
+                <div class="w-full max-w-4xl mx-auto flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="p-2.5 bg-emerald-medium/50 rounded-xl border border-emerald-light/10 flex-shrink-0 shadow-inner">
+                            <i data-lucide="bell" class="w-5 h-5 text-gold-accent"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-[9px] font-mono font-bold text-gold-accent tracking-widest uppercase block mb-0.5 opacity-90">Pengumuman Resmi</span>
+                            <h1 class="text-sm font-serif-custom font-bold tracking-wide truncate">
+                                SMP & SMK Az-Zahro
+                            </h1>
+                        </div>
+                    </div>
+                    <span class="bg-gold-accent/20 border border-gold-accent/40 text-gold-accent font-bold text-[10px] px-3 py-1.5 rounded-xl uppercase tracking-wider">
+                        Versi Baru
+                    </span>
+                </div>
+            </nav>
+
+            <!-- Konten Utama -->
+            <main class="w-full max-w-3xl mx-auto px-4 my-8 space-y-6">
+                
+                <!-- Salam & Pembuka -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                    <div class="border-b border-slate-100 pb-4 mb-4">
+                        <h2 class="text-lg font-serif-custom font-bold text-emerald-deep mb-1">
+                            Assalamu’alaikum Warahmatullahi Wabarakatuh
+                        </h2>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            Kepada Yth. Bapak/Ibu Guru SMP dan SMK Az-Zahro
+                        </p>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed">
+                        Bersama pesan ini, kami informasikan pembaruan <strong>Aplikasi Presensi Terbaru</strong> yang dirancang untuk mempermudah proses pencatatan kehadiran siswa secara lebih fleksibel, baik secara online maupun offline.
+                    </p>
+                </div>
+
+                <!-- Fitur Unggulan Presensi Terbaru -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                    <div class="flex items-center gap-2 mb-5 border-b border-slate-100 pb-3">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-gold-accent"></i>
+                        <h3 class="text-xs font-bold text-slate-900 font-serif-custom uppercase tracking-wider">
+                            Fitur Unggulan Presensi Terbaru
+                        </h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Fitur 1 -->
+                        <div class="p-4 rounded-xl bg-emerald-soft border border-emerald-light/40 flex items-start gap-3">
+                            <div class="p-2 bg-emerald-deep text-white rounded-lg flex-shrink-0 mt-0.5">
+                                <i data-lucide="refresh-cw" class="w-4 h-4 text-gold-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-deep mb-1">1. Sinkronisasi Otomatis Harian</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">Memungkinkan data siswa tersinkronisasi setiap hari agar dapat digunakan dengan lancar dalam mode online maupun offline.</p>
+                            </div>
+                        </div>
+
+                        <!-- Fitur 2 -->
+                        <div class="p-4 rounded-xl bg-emerald-soft border border-emerald-light/40 flex items-start gap-3">
+                            <div class="p-2 bg-emerald-deep text-white rounded-lg flex-shrink-0 mt-0.5">
+                                <i data-lucide="qr-code" class="w-4 h-4 text-gold-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-deep mb-1">2. Presensi Scan QR Code</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">Mempermudah guru melakukan absensi dengan memindai kartu QR Code siswa secara praktis.</p>
+                            </div>
+                        </div>
+
+                        <!-- Fitur 3 -->
+                        <div class="p-4 rounded-xl bg-emerald-soft border border-emerald-light/40 flex items-start gap-3">
+                            <div class="p-2 bg-emerald-deep text-white rounded-lg flex-shrink-0 mt-0.5">
+                                <i data-lucide="user-check" class="w-4 h-4 text-gold-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-deep mb-1">3. Presensi Manual</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">Memungkinkan guru mencatat kehadiran murid secara langsung dengan memilih status (Hadir, Sakit, Izin, atau Alpa).</p>
+                            </div>
+                        </div>
+
+                        <!-- Fitur 4 -->
+                        <div class="p-4 rounded-xl bg-emerald-soft border border-emerald-light/40 flex items-start gap-3">
+                            <div class="p-2 bg-emerald-deep text-white rounded-lg flex-shrink-0 mt-0.5">
+                                <i data-lucide="wifi-off" class="w-4 h-4 text-gold-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-deep mb-1">4. Antrean Offline</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">Data presensi saat offline tersimpan otomatis dan akan dikirimkan kembali seketika perangkat terhubung ke internet.</p>
+                            </div>
+                        </div>
+
+                        <!-- Fitur 5 -->
+                        <div class="p-4 rounded-xl bg-emerald-soft border border-emerald-light/40 flex items-start gap-3 md:col-span-2">
+                            <div class="p-2 bg-emerald-deep text-white rounded-lg flex-shrink-0 mt-0.5">
+                                <i data-lucide="calendar-range" class="w-4 h-4 text-gold-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-deep mb-1">5. Rekapitulasi Fleksibel</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">Memiliki fitur penggantian bulan pada rekapitulasi presensi untuk memudahkan pengecekan data bulanan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Video Tutorial / Youtube Embed -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-4">
+                    <div class="flex items-center gap-2 border-b border-slate-100 pb-3">
+                        <i data-lucide="video" class="w-5 h-5 text-rose-600"></i>
+                        <h3 class="text-xs font-bold text-slate-900 font-serif-custom uppercase tracking-wider">
+                            Video Panduan Penggunaan
+                        </h3>
+                    </div>
+
+                    <p class="text-xs text-slate-600">
+                        Bapak/Ibu guru dapat langsung mengeksplorasi fungsi-fungsi aplikasi ini setelah melakukan instalasi. Panduan selengkapnya dapat disaksikan pada video di bawah ini:
+                    </p>
+
+                    <!-- Embed Iframe YouTube Responsive -->
+                    <div class="relative w-full overflow-hidden rounded-xl bg-black aspect-video shadow-md border border-slate-200">
+                        <iframe 
+                            class="absolute top-0 left-0 w-full h-full"
+                            src="https://www.youtube.com/embed/5wR7zWRUty8" 
+                            title="Panduan Penggunaan Aplikasi Presensi Az-Zahro" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+
+                    <div class="text-center pt-1">
+                        <a href="https://youtu.be/5wR7zWRUty8?si=q5rKAGLHCv9qz2Ak" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-semibold transition-colors">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                            Buka di Aplikasi YouTube
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Catatan Bantuan & Penutup -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-4">
+                    <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-center gap-3">
+                        <i data-lucide="message-square" class="w-5 h-5 text-amber-600 flex-shrink-0"></i>
+                        <p class="text-xs text-amber-900 leading-relaxed font-medium">
+                            Jika Bapak/Ibu mengalami kendala saat penggunaan, silakan menghubungi kami melalui chat pribadi (Japri).
+                        </p>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-100 text-slate-700">
+                        <p class="text-xs text-slate-600 mb-2">Terima kasih atas kerja sama dan dedikasi Bapak/Ibu sekalian.</p>
+                        <p class="text-xs md:text-sm font-serif-custom font-bold text-emerald-deep">
+                            Wassalamu’alaikum Warahmatullahi Wabarakatuh.
+                        </p>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- Footer Lembaga -->
+        <footer class="bg-emerald-deep text-slate-200 border-t-2 border-gold-accent/40 mt-auto py-5 px-4">
+            <div class="w-full max-w-4xl mx-auto space-y-3.5">
+                <div class="space-y-1 text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-1.5 text-white">
+                        <i data-lucide="info" class="w-3.5 h-3.5 text-gold-accent"></i>
+                        <span class="font-serif-custom font-bold text-xs tracking-wide">Sistem Presensi Lembaga</span>
+                    </div>
+                    <p class="text-[10px] text-slate-300 leading-relaxed opacity-90">
+                        Aplikasi digital internal terintegrasi untuk mempermudah manajemen perizinan dan rekapitulasi kehadiran dewan guru secara real-time.
+                    </p>
+                </div>
+                <div class="border-t border-emerald-medium/40 pt-2.5 text-center text-[9px] text-slate-400 font-medium tracking-wide">
+                    &copy; 2026 Yayasan Ponpes Salafiyah Syafi'iyah Az-Zahro<br>
+                    SMP Islam Az-Zahro • SMK Az-Zahro
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
