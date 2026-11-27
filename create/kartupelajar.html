@@ -1,1 +1,1026 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Kartu Pelajar - SMP Islam Az-Zahro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Arimo:wght@400;600;700&family=Lora:wght@700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --emerald-dark: #066332;
+      --emerald-mid: #0C8A46;
+      --orange-accent: #F29100;
+    }
 
+    body {
+      font-family: 'Arimo', sans-serif;
+      background-color: #f1f5f9;
+    }
+
+    /* Ukuran kanvas asli kartu: 856 x 540 px (rasio standar ID Card CR80) */
+    .card-wrapper {
+      width: 856px;
+      height: 540px;
+      position: relative;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.25);
+      user-select: none;
+      transform-origin: top left;
+    }
+
+    /* Header Hijau */
+    .card-header {
+      position: relative;
+      z-index: 20;
+      height: 146px;
+      background-color: var(--emerald-dark);
+      border-bottom: 6px solid var(--orange-accent);
+      display: flex;
+      align-items: center;
+      padding: 10px 22px;
+      color: #ffffff;
+    }
+
+    .header-logo {
+      width: 104px;
+      height: 104px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    .header-text {
+      flex: 1;
+      text-align: center;
+      padding-right: 16px;
+    }
+
+    .header-yayasan {
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 700;
+      font-size: 23.5px;
+      letter-spacing: 0.4px;
+      line-height: 1.15;
+    }
+
+    .header-sekolah {
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 700;
+      font-size: 22.5px;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
+    .header-npsn {
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 700;
+      font-size: 13.5px;
+      letter-spacing: 0.3px;
+      margin-top: 4px;
+    }
+
+    .header-alamat {
+      font-family: 'Lora', Georgia, serif;
+      font-weight: 700;
+      font-size: 11.4px;
+      letter-spacing: 0.1px;
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+
+    /* Dekorasi Kanan */
+    .shape-orange-top {
+      position: absolute;
+      top: 146px;
+      right: 0;
+      width: 220px;
+      height: 220px;
+      background-color: var(--orange-accent);
+      clip-path: polygon(18% 0, 100% 0, 100% 100%);
+      z-index: 2;
+    }
+
+    .shape-green-main {
+      position: absolute;
+      top: 146px;
+      right: 0;
+      width: 390px;
+      height: 394px;
+      background-color: var(--emerald-mid);
+      clip-path: polygon(22% 0, 48% 0, 100% 62%, 100% 100%, 42% 100%, 60% 64%);
+      z-index: 3;
+    }
+
+    .shape-green-dark-bottom {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 280px;
+      height: 190px;
+      background-color: var(--emerald-dark);
+      clip-path: polygon(45% 0, 100% 35%, 100% 100%, 18% 100%);
+      z-index: 4;
+    }
+
+    /* Dua Jajar Genjang Hijau Bawah */
+    .parallelogram-1 {
+      position: absolute;
+      bottom: 0;
+      left: 382px;
+      width: 66px;
+      height: 46px;
+      background-color: var(--emerald-mid);
+      transform: skewX(-22deg);
+      z-index: 10;
+    }
+
+    .parallelogram-2 {
+      position: absolute;
+      bottom: 0;
+      left: 462px;
+      width: 66px;
+      height: 46px;
+      background-color: var(--emerald-mid);
+      transform: skewX(-22deg);
+      z-index: 10;
+    }
+
+    /* Bingkai Foto Hexagon */
+    .hex-outer {
+      position: absolute;
+      top: 175px;
+      right: 42px;
+      width: 306px;
+      height: 326px;
+      background-color: var(--emerald-mid);
+      clip-path: polygon(50% 0%, 96% 25%, 96% 75%, 50% 100%, 4% 75%, 4% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 15;
+    }
+
+    .hex-inner {
+      width: 274px;
+      height: 292px;
+      background-color: #d9e6df;
+      clip-path: polygon(50% 0%, 96% 25%, 96% 75%, 50% 100%, 4% 75%, 4% 25%);
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    .hex-inner:active {
+      cursor: grabbing;
+    }
+
+    #previewPhoto {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      max-width: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform-origin: center center;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* Judul Kartu Pelajar */
+    .title-block {
+      position: absolute;
+      top: 174px;
+      left: 42px;
+      z-index: 15;
+    }
+
+    .card-title {
+      font-family: 'Anton', 'Oswald', sans-serif;
+      font-size: 56px;
+      line-height: 1;
+      color: var(--emerald-dark);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .title-underline {
+      margin-top: 8px;
+      width: 446px;
+      height: 5px;
+      display: flex;
+    }
+
+    .title-underline-green {
+      width: 112px;
+      height: 100%;
+      background-color: var(--emerald-dark);
+    }
+
+    .title-underline-orange {
+      flex: 1;
+      height: 100%;
+      background-color: var(--orange-accent);
+    }
+
+    /* Tabel Biodata */
+    .biodata-table {
+      position: absolute;
+      top: 266px;
+      left: 42px;
+      z-index: 15;
+      font-family: 'Arimo', sans-serif;
+      font-size: 22.5px;
+      line-height: 1.26;
+      color: #111111;
+      border-collapse: collapse;
+    }
+
+    .biodata-table td {
+      vertical-align: top;
+      padding: 1px 0;
+    }
+
+    .col-label {
+      width: 112px;
+      font-weight: 400;
+    }
+
+    .col-sep {
+      width: 18px;
+      text-align: center;
+    }
+
+    .col-val {
+      max-width: 345px;
+      font-weight: 400;
+      word-wrap: break-word;
+    }
+
+    /* QR Code TTD Kepala Sekolah */
+    .qr-box {
+      position: absolute;
+      bottom: 24px;
+      left: 42px;
+      width: 86px;
+      height: 86px;
+      background: #ffffff;
+      z-index: 15;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-box img, .qr-box canvas {
+      width: 86px !important;
+      height: 86px !important;
+    }
+
+    /* Matriks Titik-Titik */
+    .dots-grid {
+      position: absolute;
+      bottom: 28px;
+      left: 148px;
+      display: grid;
+      grid-template-columns: repeat(6, 5px);
+      grid-template-rows: repeat(4, 5px);
+      gap: 6px 8px;
+      z-index: 15;
+    }
+
+    .dots-grid span {
+      width: 4.5px;
+      height: 4.5px;
+      background-color: #111111;
+      border-radius: 50%;
+      display: block;
+    }
+
+    /* Mode Print */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printArea, #printArea * {
+        visibility: visible;
+      }
+      #printArea {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 85.6mm;
+        height: 54mm;
+        margin: 0;
+        padding: 0;
+        box-shadow: none !important;
+        transform: scale(0.378) !important;
+        transform-origin: top left !important;
+      }
+      @page {
+        size: 85.6mm 54mm;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800">
+
+  <!-- Navbar -->
+  <header class="bg-[#066332] text-white shadow-md border-b-4 border-[#F29100]">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <img src="https://azzahro.web.id/media/logo/smp-azzahro.png" alt="Logo" class="w-10 h-10 object-contain bg-white/10 rounded-full p-0.5">
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Generator Kartu Pelajar</h1>
+          <p class="text-xs text-emerald-100">SMP Islam Az-Zahro • Ponpes Salafiyah Syafi'iyah Az-Zahro</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="downloadCardPNG()" id="btnDownload" class="bg-[#F29100] hover:bg-amber-600 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow flex items-center gap-2 transition cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+          Unduh PNG (HD)
+        </button>
+        <button onclick="window.print()" class="bg-white/15 hover:bg-white/25 text-white font-semibold px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
+          Cetak Kartu
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Kolom Kiri: Form Identitas & Foto -->
+    <section class="lg:col-span-4 bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
+      <div class="border-b border-slate-100 pb-2.5 flex items-center justify-between">
+        <h2 class="font-bold text-base text-[#066332]">Data Identitas Siswa</h2>
+        <button type="button" onclick="resetDefault()" class="text-xs text-slate-500 hover:text-[#066332] underline cursor-pointer">Reset Contoh</button>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Siswa</label>
+        <input type="text" id="inputNama" value="WULAN DARI" oninput="updateCard()" placeholder="Masukkan nama lengkap"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Tempat / Tanggal Lahir</label>
+        <input type="text" id="inputTgl" value="30 Maret, 2013" oninput="updateCard()" placeholder="Contoh: 30 Maret, 2013"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">NISN</label>
+        <input type="text" id="inputNisn" value="3139540746" oninput="updateCard()" placeholder="Masukkan 10 digit NISN"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat Lengkap</label>
+        <textarea id="inputAlamat" rows="2" oninput="updateCard()" placeholder="Masukkan alamat siswa"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]">Desa Purnama, Kec. Tegalampel, Kab. Bondowoso</textarea>
+      </div>
+
+      <!-- Upload Foto -->
+      <div class="pt-2 border-t border-slate-100">
+        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Foto Pelajar</label>
+        <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-emerald-300 rounded-lg cursor-pointer bg-emerald-50/40 hover:bg-emerald-50 transition">
+          <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center px-2">
+            <svg class="w-6 h-6 text-[#066332] mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <p class="text-xs font-medium text-[#066332]">Klik untuk unggah foto siswa</p>
+            <p class="text-[11px] text-slate-400">JPG, PNG, WEBP</p>
+          </div>
+          <input type="file" id="inputPhoto" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)" />
+        </label>
+
+        <!-- Kontrol Zoom & Posisi Foto -->
+        <div class="mt-3 space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <div class="flex items-center justify-between text-[11px] font-medium text-slate-600">
+            <span>Perbesar (Zoom): <strong id="zoomVal">100%</strong></span>
+            <button type="button" onclick="resetPhotoPosition()" class="text-[#066332] hover:underline font-semibold cursor-pointer">Reset Posisi</button>
+          </div>
+          <input type="range" id="photoZoom" min="0.5" max="3" step="0.02" value="1" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
+          
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <div>
+              <span class="block text-[11px] font-medium text-slate-600">Geser Kiri/Kanan</span>
+              <input type="range" id="photoX" min="-250" max="250" step="1" value="0" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
+            </div>
+            <div>
+              <span class="block text-[11px] font-medium text-slate-600">Geser Atas/Bawah</span>
+              <input type="range" id="photoY" min="-250" max="250" step="1" value="0" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
+            </div>
+          </div>
+          <p class="text-[10.5px] text-slate-500 pt-0.5 leading-snug">Tips: Geser atau cubit (pinch) langsung pada bingkai foto di kartu pratinjau.</p>
+        </div>
+      </div>
+
+      <!-- Info QR Code TTD Kepala Sekolah -->
+      <div class="pt-2 border-t border-slate-100">
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Link QR Code TTD Kepala Sekolah</label>
+        <input type="text" id="inputQrLink" value="https://drive.google.com/file/d/1pO8yn3v98Df1ePErHs7Kst7L2183KZCL/" oninput="generateQR()"
+          class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600 focus:outline-none focus:border-[#066332]" />
+      </div>
+    </section>
+
+    <!-- Kolom Kanan: Pratinjau Kartu Pelajar -->
+    <section class="lg:col-span-8 flex flex-col items-center">
+      <div class="w-full flex items-center justify-between mb-2 px-1">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Pratinjau Langsung (Live Preview)</span>
+        <span class="text-xs text-slate-400">Ukuran Standar CR80 (85.6 × 54 mm)</span>
+      </div>
+
+      <!-- Container Responsif -->
+      <div id="previewContainer" class="w-full overflow-hidden flex justify-center items-start bg-slate-200/70 p-4 rounded-xl border border-slate-300">
+        <div id="printArea" class="card-wrapper">
+          
+          <!-- Header Kop Sekolah -->
+          <div class="card-header">
+            <img id="logoImg" src="https://azzahro.web.id/media/logo/smp-azzahro.png" alt="Logo SMP Islam Az-Zahro" class="header-logo" />
+            <div class="header-text">
+              <div class="header-yayasan">PONPES SALAFIYAH SYAFI’IYAH AZ-ZAHRO</div>
+              <div class="header-sekolah">SMP ISLAM AZ-ZAHRO</div>
+              <div class="header-npsn">NPSN : 70024271 , SIOP : 503.421/35/PENDIK/1/430.9.13/2021</div>
+              <div class="header-alamat">Sekretaris : Desa Locare Krajan Rt 02/Rw 01 Kec Curahdami. Bondowoso. HP : 085233485436. Kode Pos : 68251</div>
+            </div>
+          </div>
+
+          <!-- Bentuk Geometris Kanan & Bawah -->
+          <div class="shape-orange-top"></div>
+          <div class="shape-green-main"></div>
+          <div class="shape-green-dark-bottom"></div>
+          <div class="parallelogram-1"></div>
+          <div class="parallelogram-2"></div>
+
+          <!-- Judul -->
+          <div class="title-block">
+            <div class="card-title">KARTU PELAJAR</div>
+            <div class="title-underline">
+              <div class="title-underline-green"></div>
+              <div class="title-underline-orange"></div>
+            </div>
+          </div>
+
+          <!-- Biodata Siswa -->
+          <table class="biodata-table">
+            <tr>
+              <td class="col-label">Nama</td>
+              <td class="col-sep">:</td>
+              <td class="col-val" id="cardNama">WULAN DARI</td>
+            </tr>
+            <tr>
+              <td class="col-label">Tgl. Lahir</td>
+              <td class="col-sep">:</td>
+              <td class="col-val" id="cardTgl">30 Maret, 2013</td>
+            </tr>
+            <tr>
+              <td class="col-label">NISN</td>
+              <td class="col-sep">:</td>
+              <td class="col-val" id="cardNisn">3139540746</td>
+            </tr>
+            <tr>
+              <td class="col-label">Alamat</td>
+              <td class="col-sep">:</td>
+              <td class="col-val" id="cardAlamat">Desa Purnama, Kec. Tegalampel, Kab. Bondowoso</td>
+            </tr>
+          </table>
+
+          <!-- QR Code TTD Kepala Sekolah -->
+          <div class="qr-box" id="qrcode"></div>
+
+          <!-- Matriks Titik 6x4 -->
+          <div class="dots-grid" id="dotsGrid"></div>
+
+          <!-- Foto Hexagon -->
+          <div class="hex-outer">
+            <div class="hex-inner" id="hexFrame" title="Geser atau cubit untuk mengatur posisi dan zoom foto">
+              <img id="previewPhoto" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='320' viewBox='0 0 300 320'><rect width='300' height='320' fill='%23cfe0d7'/><circle cx='150' cy='115' r='52' fill='%23066332' opacity='0.28'/><path d='M65 290 C65 215, 235 215, 235 290' fill='%23066332' opacity='0.28'/><text x='150' y='305' font-family='sans-serif' font-size='14' fill='%23066332' text-anchor='middle' font-weight='bold'>UNGGAH FOTO SISWA</text></svg>" alt="Foto Siswa" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // State global transformasi foto
+    let photoState = {
+      zoom: 1,
+      x: 0,
+      y: 0
+    };
+    let currentCardScale = 1;
+
+    // Inisialisasi titik-titik hitam 6x4 pada pratinjau HTML
+    const dotsGrid = document.getElementById('dotsGrid');
+    for (let i = 0; i < 24; i++) {
+      const dot = document.createElement('span');
+      dotsGrid.appendChild(dot);
+    }
+
+    // Generate QR Code
+    let qrInstance = null;
+    function generateQR() {
+      const qrContainer = document.getElementById('qrcode');
+      const link = document.getElementById('inputQrLink').value.trim() || 'https://drive.google.com/file/d/1pO8yn3v98Df1ePErHs7Kst7L2183KZCL/';
+      qrContainer.innerHTML = '';
+      qrInstance = new QRCode(qrContainer, {
+        text: link,
+        width: 172,
+        height: 172,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    // Update teks biodata secara real-time
+    function updateCard() {
+      document.getElementById('cardNama').textContent = document.getElementById('inputNama').value || '-';
+      document.getElementById('cardTgl').textContent = document.getElementById('inputTgl').value || '-';
+      document.getElementById('cardNisn').textContent = document.getElementById('inputNisn').value || '-';
+      document.getElementById('cardAlamat').textContent = document.getElementById('inputAlamat').value || '-';
+    }
+
+    // Terapkan state ke tampilan foto & sinkronkan dengan input slider
+    function applyPhotoTransform() {
+      photoState.zoom = Math.min(3, Math.max(0.5, photoState.zoom));
+      photoState.x = Math.min(250, Math.max(-250, photoState.x));
+      photoState.y = Math.min(250, Math.max(-250, photoState.y));
+
+      document.getElementById('photoZoom').value = photoState.zoom.toFixed(2);
+      document.getElementById('photoX').value = Math.round(photoState.x);
+      document.getElementById('photoY').value = Math.round(photoState.y);
+      document.getElementById('zoomVal').textContent = Math.round(photoState.zoom * 100) + '%';
+
+      const img = document.getElementById('previewPhoto');
+      img.style.transform = `translate(calc(-50% + ${photoState.x}px), calc(-50% + ${photoState.y}px)) scale(${photoState.zoom})`;
+    }
+
+    // Dipanggil saat user menggeser slider manual
+    function syncFromSliders() {
+      photoState.zoom = parseFloat(document.getElementById('photoZoom').value);
+      photoState.x = parseFloat(document.getElementById('photoX').value);
+      photoState.y = parseFloat(document.getElementById('photoY').value);
+      applyPhotoTransform();
+    }
+
+    // Reset posisi dan zoom foto ke tengah
+    function resetPhotoPosition() {
+      photoState = { zoom: 1, x: 0, y: 0 };
+      applyPhotoTransform();
+    }
+
+    // Upload Foto Siswa
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.getElementById('previewPhoto');
+        img.src = e.target.result;
+        resetPhotoPosition();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Interaksi Sentuh (Drag 1 Jari & Pinch-to-Zoom 2 Jari) + Mouse Drag & Wheel
+    function setupPhotoGestures() {
+      const hexFrame = document.getElementById('hexFrame');
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let initialX = 0;
+      let initialY = 0;
+
+      let initialPinchDist = null;
+      let initialZoom = 1;
+      let pinchMidX = 0;
+      let pinchMidY = 0;
+
+      function getTouchDistance(t1, t2) {
+        return Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+      }
+
+      function getTouchMidpoint(t1, t2) {
+        return {
+          x: (t1.clientX + t2.clientX) / 2,
+          y: (t1.clientY + t2.clientY) / 2
+        };
+      }
+
+      // --- TOUCH EVENTS (HP / Tablet / Layar Sentuh) ---
+      hexFrame.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          initialPinchDist = null;
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          initialX = photoState.x;
+          initialY = photoState.y;
+        } else if (e.touches.length === 2) {
+          isDragging = false;
+          initialPinchDist = getTouchDistance(e.touches[0], e.touches[1]);
+          initialZoom = photoState.zoom;
+          const mid = getTouchMidpoint(e.touches[0], e.touches[1]);
+          pinchMidX = mid.x;
+          pinchMidY = mid.y;
+          initialX = photoState.x;
+          initialY = photoState.y;
+        }
+      }, { passive: false });
+
+      hexFrame.addEventListener('touchmove', (e) => {
+        e.preventDefault(); // Mencegah halaman ikut ter-scroll saat menggeser/zoom foto
+        if (e.touches.length === 1 && isDragging) {
+          const dx = (e.touches[0].clientX - startX) / currentCardScale;
+          const dy = (e.touches[0].clientY - startY) / currentCardScale;
+          photoState.x = initialX + dx;
+          photoState.y = initialY + dy;
+          applyPhotoTransform();
+        } else if (e.touches.length === 2 && initialPinchDist) {
+          const currentDist = getTouchDistance(e.touches[0], e.touches[1]);
+          const scaleFactor = currentDist / initialPinchDist;
+          photoState.zoom = initialZoom * scaleFactor;
+
+          // Sekaligus mendukung geser halus saat 2 jari bergerak bersamaan
+          const mid = getTouchMidpoint(e.touches[0], e.touches[1]);
+          photoState.x = initialX + (mid.x - pinchMidX) / currentCardScale;
+          photoState.y = initialY + (mid.y - pinchMidY) / currentCardScale;
+          applyPhotoTransform();
+        }
+      }, { passive: false });
+
+      hexFrame.addEventListener('touchend', (e) => {
+        if (e.touches.length === 1) {
+          // Jika salah satu jari diangkat setelah pinch, lanjut drag 1 jari dengan mulus
+          isDragging = true;
+          initialPinchDist = null;
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          initialX = photoState.x;
+          initialY = photoState.y;
+        } else if (e.touches.length === 0) {
+          isDragging = false;
+          initialPinchDist = null;
+        }
+      });
+
+      // --- MOUSE EVENTS (Laptop / PC) ---
+      hexFrame.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialX = photoState.x;
+        initialY = photoState.y;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = (e.clientX - startX) / currentCardScale;
+        const dy = (e.clientY - startY) / currentCardScale;
+        photoState.x = initialX + dx;
+        photoState.y = initialY + dy;
+        applyPhotoTransform();
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // Zoom dengan scroll roda mouse pada bingkai foto
+      hexFrame.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.08 : -0.08;
+        photoState.zoom += delta;
+        applyPhotoTransform();
+      }, { passive: false });
+    }
+
+    // Reset ke contoh default
+    function resetDefault() {
+      document.getElementById('inputNama').value = 'WULAN DARI';
+      document.getElementById('inputTgl').value = '30 Maret, 2013';
+      document.getElementById('inputNisn').value = '3139540746';
+      document.getElementById('inputAlamat').value = 'Desa Purnama, Kec. Tegalampel, Kab. Bondowoso';
+      document.getElementById('inputQrLink').value = 'https://drive.google.com/file/d/1pO8yn3v98Df1ePErHs7Kst7L2183KZCL/';
+      resetPhotoPosition();
+      updateCard();
+      generateQR();
+    }
+
+    // Responsif skala kartu pada layar kecil
+    function fitCardPreview() {
+      const container = document.getElementById('previewContainer');
+      const card = document.getElementById('printArea');
+      const availableWidth = container.clientWidth - 32;
+      if (availableWidth < 856) {
+        currentCardScale = availableWidth / 856;
+        card.style.transform = `scale(${currentCardScale})`;
+        container.style.height = (540 * currentCardScale + 32) + 'px';
+      } else {
+        currentCardScale = 1;
+        card.style.transform = 'scale(1)';
+        container.style.height = 'auto';
+      }
+    }
+
+    // Helper: Memuat gambar dengan aman (mendukung fallback CORS)
+    function loadImageSafe(src) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = () => {
+          const imgFallback = new Image();
+          imgFallback.onload = () => resolve(imgFallback);
+          imgFallback.onerror = () => resolve(null);
+          imgFallback.src = src;
+        };
+        img.src = src;
+      });
+    }
+
+    // Helper: Membungkus teks panjang di Canvas (Word Wrap)
+    function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      let currentY = y;
+
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line.trim(), x, currentY);
+          line = words[n] + ' ';
+          currentY += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line.trim(), x, currentY);
+    }
+
+    // Helper: Menggambar jalur segi enam pada Canvas
+    function traceHexagon(ctx, cx, cy, w, h) {
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - h * 0.50);          // 50% 0%
+      ctx.lineTo(cx + w * 0.46, cy - h * 0.25); // 96% 25%
+      ctx.lineTo(cx + w * 0.46, cy + h * 0.25); // 96% 75%
+      ctx.lineTo(cx, cy + h * 0.50);          // 50% 100%
+      ctx.lineTo(cx - w * 0.46, cy + h * 0.25); // 4% 75%
+      ctx.lineTo(cx - w * 0.46, cy - h * 0.25); // 4% 25%
+      ctx.closePath();
+    }
+
+    // Mesin Render Native HTML5 Canvas (1712 x 1080 px - Presisi 100% Tanpa Berantakan)
+    async function downloadCardPNG() {
+      const btn = document.getElementById('btnDownload');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = 'Memproses Gambar...';
+      btn.disabled = true;
+
+      try {
+        await document.fonts.ready;
+
+        const W = 856;
+        const H = 540;
+        const SCALE = 2; // Resolusi 2x HD (1712 x 1080)
+
+        const canvas = document.createElement('canvas');
+        canvas.width = W * SCALE;
+        canvas.height = H * SCALE;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(SCALE, SCALE);
+
+        // 1. Background Putih Dasar
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, W, H);
+
+        // 2. Dekorasi Geometris Kanan
+        ctx.fillStyle = '#F29100';
+        ctx.beginPath();
+        ctx.moveTo((W - 220) + 220 * 0.18, 146);
+        ctx.lineTo(W, 146);
+        ctx.lineTo(W, 146 + 220);
+        ctx.closePath();
+        ctx.fill();
+
+        const gx = W - 390;
+        const gy = 146;
+        ctx.fillStyle = '#0C8A46';
+        ctx.beginPath();
+        ctx.moveTo(gx + 390 * 0.22, gy);
+        ctx.lineTo(gx + 390 * 0.48, gy);
+        ctx.lineTo(W, gy + 394 * 0.62);
+        ctx.lineTo(W, H);
+        ctx.lineTo(gx + 390 * 0.42, H);
+        ctx.lineTo(gx + 390 * 0.60, gy + 394 * 0.64);
+        ctx.closePath();
+        ctx.fill();
+
+        const dx = W - 280;
+        const dy = H - 190;
+        ctx.fillStyle = '#066332';
+        ctx.beginPath();
+        ctx.moveTo(dx + 280 * 0.45, dy);
+        ctx.lineTo(W, dy + 190 * 0.35);
+        ctx.lineTo(W, H);
+        ctx.lineTo(dx + 280 * 0.18, H);
+        ctx.closePath();
+        ctx.fill();
+
+        // 3. Dua Jajar Genjang Hijau Bawah
+        const skewOffset = Math.tan(22 * Math.PI / 180) * 46;
+        ctx.fillStyle = '#0C8A46';
+
+        ctx.beginPath();
+        ctx.moveTo(382 + skewOffset / 2, H - 46);
+        ctx.lineTo(382 + 66 + skewOffset / 2, H - 46);
+        ctx.lineTo(382 + 66 - skewOffset / 2, H);
+        ctx.lineTo(382 - skewOffset / 2, H);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(462 + skewOffset / 2, H - 46);
+        ctx.lineTo(462 + 66 + skewOffset / 2, H - 46);
+        ctx.lineTo(462 + 66 - skewOffset / 2, H);
+        ctx.lineTo(462 - skewOffset / 2, H);
+        ctx.closePath();
+        ctx.fill();
+
+        // 4. Header Kop Sekolah
+        ctx.fillStyle = '#066332';
+        ctx.fillRect(0, 0, W, 140);
+        ctx.fillStyle = '#F29100';
+        ctx.fillRect(0, 140, W, 6);
+
+        const logoImg = await loadImageSafe(document.getElementById('logoImg').src);
+        if (logoImg) {
+          ctx.drawImage(logoImg, 22, 18, 104, 104);
+        }
+
+        const textCenterX = 22 + 104 + 12 + (W - (22 + 104 + 12 + 22 + 16)) / 2;
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        ctx.font = '700 23.5px Lora, Georgia, serif';
+        ctx.fillText('PONPES SALAFIYAH SYAFI’IYAH AZ-ZAHRO', textCenterX, 17);
+
+        ctx.font = '700 22.5px Lora, Georgia, serif';
+        ctx.fillText('SMP ISLAM AZ-ZAHRO', textCenterX, 47);
+
+        ctx.font = '700 13.5px Lora, Georgia, serif';
+        ctx.fillText('NPSN : 70024271 , SIOP : 503.421/35/PENDIK/1/430.9.13/2021', textCenterX, 78);
+
+        ctx.font = '700 11.4px Lora, Georgia, serif';
+        ctx.fillText('Sekretaris : Desa Locare Krajan Rt 02/Rw 01 Kec Curahdami. Bondowoso. HP : 085233485436. Kode Pos : 68251', textCenterX, 101);
+
+        // 5. Judul KARTU PELAJAR & Garis Bawah Dua Warna
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#066332';
+        ctx.font = '700 56px Anton, Oswald, sans-serif';
+        ctx.fillText('KARTU PELAJAR', 42, 172);
+
+        ctx.fillStyle = '#066332';
+        ctx.fillRect(42, 238, 112, 5);
+        ctx.fillStyle = '#F29100';
+        ctx.fillRect(42 + 112, 238, 334, 5);
+
+        // 6. Biodata Siswa
+        const nama = document.getElementById('inputNama').value || '-';
+        const tgl = document.getElementById('inputTgl').value || '-';
+        const nisn = document.getElementById('inputNisn').value || '-';
+        const alamat = document.getElementById('inputAlamat').value || '-';
+
+        ctx.fillStyle = '#111111';
+        ctx.font = '400 22.5px Arimo, sans-serif';
+        const rowH = 30.5;
+        let startY = 267;
+
+        const fields = [
+          { label: 'Nama', val: nama },
+          { label: 'Tgl. Lahir', val: tgl },
+          { label: 'NISN', val: nisn },
+          { label: 'Alamat', val: alamat }
+        ];
+
+        fields.forEach((item, idx) => {
+          const y = startY + idx * rowH;
+          ctx.fillText(item.label, 42, y);
+          ctx.fillText(':', 157, y);
+          if (item.label === 'Alamat') {
+            drawWrappedText(ctx, item.val, 174, y, 342, 29);
+          } else {
+            ctx.fillText(item.val, 174, y);
+          }
+        });
+
+        // 7. QR Code TTD Kepala Sekolah
+        const qrCanvas = document.querySelector('#qrcode canvas');
+        const qrImg = document.querySelector('#qrcode img');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(42, H - 24 - 86, 86, 86);
+        if (qrCanvas) {
+          ctx.drawImage(qrCanvas, 42, H - 24 - 86, 86, 86);
+        } else if (qrImg && qrImg.src) {
+          const loadedQr = await loadImageSafe(qrImg.src);
+          if (loadedQr) ctx.drawImage(loadedQr, 42, H - 24 - 86, 86, 86);
+        }
+
+        // 8. Matriks Titik-Titik Hitam
+        ctx.fillStyle = '#111111';
+        const dotsStartX = 148;
+        const dotsStartY = H - 28 - (4 * 5 + 3 * 6);
+        for (let r = 0; r < 4; r++) {
+          for (let c = 0; c < 6; c++) {
+            const cx = dotsStartX + c * (5 + 8) + 2.25;
+            const cy = dotsStartY + r * (5 + 6) + 2.25;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 2.25, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // 9. Bingkai Foto Segi Enam & Foto Siswa
+        const hexCx = W - 42 - 153;
+        const hexCy = 175 + 163;
+
+        ctx.save();
+        traceHexagon(ctx, hexCx, hexCy, 306, 326);
+        ctx.fillStyle = '#0C8A46';
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        traceHexagon(ctx, hexCx, hexCy, 274, 292);
+        ctx.fillStyle = '#d9e6df';
+        ctx.fill();
+        ctx.clip();
+
+        const photoEl = document.getElementById('previewPhoto');
+        const loadedPhoto = await loadImageSafe(photoEl.src);
+        if (loadedPhoto && loadedPhoto.naturalWidth > 0) {
+          const zoom = photoState.zoom;
+          const offX = photoState.x;
+          const offY = photoState.y;
+
+          const boxW = 274;
+          const boxH = 292;
+          const imgRatio = loadedPhoto.naturalWidth / loadedPhoto.naturalHeight;
+          const boxRatio = boxW / boxH;
+
+          let drawW, drawH;
+          if (imgRatio > boxRatio) {
+            drawH = boxH;
+            drawW = boxH * imgRatio;
+          } else {
+            drawW = boxW;
+            drawH = boxW / imgRatio;
+          }
+
+          ctx.translate(hexCx + offX, hexCy + offY);
+          ctx.scale(zoom, zoom);
+          ctx.drawImage(loadedPhoto, -drawW / 2, -drawH / 2, drawW, drawH);
+        }
+        ctx.restore();
+
+        // 10. Ekspor ke File PNG
+        const namaFile = (nama || 'Kartu_Pelajar').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
+        const link = document.createElement('a');
+        link.download = `Kartu_Pelajar_${namaFile}.png`;
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+
+      } catch (err) {
+        alert('Gagal menyimpan gambar: ' + err.message);
+      } finally {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+      }
+    }
+
+    window.addEventListener('resize', fitCardPreview);
+    window.addEventListener('DOMContentLoaded', () => {
+      generateQR();
+      fitCardPreview();
+      setupPhotoGestures();
+    });
+  </script>
+</body>
+</html>
