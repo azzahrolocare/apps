@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generator Pas Foto Massal 3x4 - Portal Az-Zahro (F4 & A4)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome untuk Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- docx.js CDN untuk generate file Microsoft Word (.docx) -->
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+  
+  <!-- jsPDF CDN untuk generate file PDF (.pdf) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            azzahro: {
+              dark: '#0F5132',      // Hijau Zamrud Tua
+              emerald: '#0CA458',   // Hijau Zamrud Cerah
+              gold: '#D4AF37',      // Emas Khas Az-Zahro
+              goldLight: '#F4E5B2', // Emas Lembut untuk Sorotan
+              mint: '#ECFDF5',      // Latar Lembut Hijau
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom scrollbar bernuansa hijau zamrud */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0F513280;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0F5132;
+    }
+
+    /* Gaya khusus untuk mode Cetak Langsung (Browser Print) */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #print-area, #print-area * {
+        visibility: visible;
+      }
+      #print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+      }
+      .paper-sheet {
+        box-shadow: none !important;
+        margin: 0 !important;
+        border: none !important;
+        page-break-after: always;
+        break-after: page;
+        transform: none !important;
+      }
+      .paper-sheet:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#F4F7F5] text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- Header / Navbar Khas Az-Zahro -->
+  <header class="bg-gradient-to-r from-[#0F5132] via-[#115E3A] to-[#0CA458] text-white border-b-2 border-[#D4AF37] sticky top-0 z-30 no-print shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[70px] flex items-center justify-between gap-2">
+      <!-- Identitas Brand Az-Zahro -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#0F5132] border-2 border-[#D4AF37] text-[#D4AF37] flex items-center justify-center shadow-inner shrink-0">
+          <i class="fa-solid fa-id-card-clip text-lg sm:text-xl"></i>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-lg font-extrabold tracking-tight text-white truncate">Generator Pas Foto 3×4</h1>
+            <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#D4AF37]/20 text-[#F4E5B2] border border-[#D4AF37]/70">
+              Az-Zahro Edition
+            </span>
+          </div>
+          <p class="text-[11px] sm:text-xs text-emerald-100/90 truncate">Susun Massal Kertas F4 & A4 • Ekspor Word (.docx) & PDF</p>
+        </div>
+      </div>
+
+      <!-- Tombol Ekspor Utama -->
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <button id="btn-export-docx" onclick="exportToDocx()" class="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#c39f2d] active:bg-[#b18f25] text-[#0F5132] text-xs sm:text-sm font-extrabold px-3 sm:px-4 py-2.5 rounded-xl shadow-md border border-[#F4E5B2]/60 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-file-word text-base"></i>
+          <span>Simpan Word <span class="hidden md:inline">(.docx)</span></span>
+        </button>
+
+        <button id="btn-export-pdf" onclick="exportToPdf()" class="inline-flex items-center gap-2 bg-[#0F5132] hover:bg-[#0a3b24] active:bg-[#072b1a] text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2.5 rounded-xl shadow-sm border border-[#D4AF37]/80 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+          <i class="fa-solid fa-file-pdf text-base text-[#D4AF37]"></i>
+          <span>Simpan PDF <span class="hidden md:inline">(.pdf)</span></span>
+        </button>
+
+        <button id="btn-print" onclick="triggerPrint()" class="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-semibold px-3 sm:px-3.5 py-2.5 rounded-xl border border-white/30 transition-all cursor-pointer hidden sm:inline-flex" title="Cetak langsung ke printer">
+          <i class="fa-solid fa-print text-[#F4E5B2]"></i>
+          <span class="hidden lg:inline">Cetak</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    
+    <!-- KOLOM KIRI: Panel Kontrol & Daftar Foto (4 kolom pada layar besar) -->
+    <aside class="lg:col-span-4 space-y-5 no-print">
+      
+      <!-- 1. Unggah Foto (Batch Upload) -->
+      <section class="bg-white rounded-2xl p-5 shadow-sm border border-[#0F5132]/15 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0F5132] via-[#0CA458] to-[#D4AF37]"></div>
+        <div class="flex items-center justify-between mb-3 pt-0.5">
+          <h2 class="text-sm font-bold text-[#0F5132] flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-[#0F5132] text-[#D4AF37] font-extrabold flex items-center justify-center text-xs shadow-xs">1</span>
+            Unggah Pas Foto Massal
+          </h2>
+          <button onclick="loadSamplePhotos()" class="text-xs text-[#0F5132] hover:text-[#0CA458] bg-emerald-50 hover:bg-emerald-100 border border-[#0CA458]/30 px-2.5 py-1 rounded-lg font-semibold transition cursor-pointer">
+            + Contoh Foto
+          </button>
+        </div>
+
+        <!-- Area Drag & Drop -->
+        <div id="drop-zone" class="border-2 border-dashed border-[#0F5132]/30 hover:border-[#0CA458] bg-[#ECFDF5]/50 hover:bg-[#ECFDF5] rounded-xl p-5 text-center transition-all cursor-pointer group">
+          <input type="file" id="file-input" multiple accept="image/*" class="hidden" />
+          <div class="w-11 h-11 rounded-full bg-white shadow-sm border border-[#D4AF37] text-[#0F5132] flex items-center justify-center mx-auto mb-2.5 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-cloud-arrow-up text-lg text-[#0CA458]"></i>
+          </div>
+          <p class="text-sm font-semibold text-[#0F5132]">Klik atau seret banyak foto ke sini</p>
+          <p class="text-xs text-slate-500 mt-1">Mendukung JPG, PNG, WEBP (Bisa pilih banyak sekaligus)</p>
+        </div>
+
+        <!-- Aksi Cepat Massal -->
+        <div id="batch-actions" class="mt-4 pt-3 border-t border-slate-100 hidden">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-medium text-slate-600">Salinan massal semua foto:</span>
+            <div class="flex items-center gap-1.5">
+              <input type="number" id="bulk-copy-input" value="4" min="1" max="100" class="w-14 text-center text-xs font-bold text-[#0F5132] border border-[#0F5132]/30 rounded-lg py-1 focus:ring-2 focus:ring-[#0CA458] focus:outline-none" />
+              <button onclick="applyBulkCopies()" class="bg-[#0F5132] hover:bg-[#0CA458] text-white text-xs font-semibold px-2.5 py-1 rounded-lg transition cursor-pointer">
+                Terapkan
+              </button>
+            </div>
+          </div>
+          <div class="flex justify-between items-center mt-2">
+            <span id="photo-count-label" class="text-xs font-medium text-slate-500">0 foto diunggah</span>
+            <button onclick="clearAllPhotos()" class="text-xs text-rose-600 hover:text-rose-700 font-semibold cursor-pointer">
+              <i class="fa-solid fa-trash-can mr-1"></i>Hapus Semua
+            </button>
+          </div>
+        </div>
+
+        <!-- Daftar Foto yang Diunggah -->
+        <div id="uploaded-list" class="mt-3 space-y-2 max-h-60 overflow-y-auto pr-1">
+          <!-- Item foto akan dirender di sini lewat JS -->
+        </div>
+      </section>
+
+      <!-- 2. Pengaturan Kertas & Ukuran Foto -->
+      <section class="bg-white rounded-2xl p-5 shadow-sm border border-[#0F5132]/15 space-y-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0F5132] via-[#0CA458] to-[#D4AF37]"></div>
+        <h2 class="text-sm font-bold text-[#0F5132] flex items-center gap-2 pt-0.5">
+          <span class="w-6 h-6 rounded-lg bg-[#0F5132] text-[#D4AF37] font-extrabold flex items-center justify-center text-xs shadow-xs">2</span>
+          Pengaturan Kertas & Ukuran
+        </h2>
+
+        <!-- Ukuran Kertas (Default F4) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Ukuran Kertas Cetak</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <label class="cursor-pointer">
+              <input type="radio" name="paperSize" value="F4" checked onchange="updateSettings()" class="peer sr-only" />
+              <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-[#0F5132] peer-checked:bg-[#ECFDF5] transition-all text-center relative">
+                <span class="absolute -top-2 right-2 bg-[#D4AF37] text-[#0F5132] text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase">Standar</span>
+                <div class="text-sm font-bold text-[#0F5132]">Kertas F4 (Folio)</div>
+                <div class="text-[11px] text-slate-600">215 × 330 mm</div>
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="paperSize" value="A4" onchange="updateSettings()" class="peer sr-only" />
+              <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-[#0F5132] peer-checked:bg-[#ECFDF5] transition-all text-center">
+                <div class="text-sm font-bold text-[#0F5132]">Kertas A4</div>
+                <div class="text-[11px] text-slate-600">210 × 297 mm</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Pilihan Presisi Ukuran Pas Foto 3x4 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Dimensi Pas Foto</label>
+          <select id="photo-preset" onchange="handlePresetChange()" class="w-full text-xs font-semibold text-[#0F5132] bg-[#ECFDF5]/60 border border-[#0F5132]/30 rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-[#0CA458] focus:outline-none">
+            <option value="27.9x38.1" selected>3 × 4 cm Standar Studio Cetak (27.9 × 38.1 mm)</option>
+            <option value="30x40">3 × 4 cm Standar Penuh (30 × 40 mm)</option>
+            <option value="20x30">2 × 3 cm (20 × 30 mm)</option>
+            <option value="40x60">4 × 6 cm (40 × 60 mm)</option>
+            <option value="custom">Ukuran Custom (Atur Sendiri)...</option>
+          </select>
+
+          <!-- Input Custom Dimensi (muncul jika pilih custom) -->
+          <div id="custom-size-box" class="grid grid-cols-2 gap-2 mt-2 hidden">
+            <div>
+              <label class="text-[11px] text-slate-500">Lebar (mm)</label>
+              <input type="number" id="custom-w" value="30" step="0.1" min="10" max="150" onchange="updateSettings()" class="w-full text-xs border border-[#0F5132]/30 rounded-lg px-2.5 py-1.5" />
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-500">Tinggi (mm)</label>
+              <input type="number" id="custom-h" value="40" step="0.1" min="10" max="200" onchange="updateSettings()" class="w-full text-xs border border-[#0F5132]/30 rounded-lg px-2.5 py-1.5" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Margin Kertas 4 Sisi (Atas, Bawah, Kiri, Kanan) -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-slate-700">Margin Kertas (mm)</label>
+            <button onclick="resetMargins()" class="text-[11px] text-[#0CA458] hover:text-[#0F5132] font-semibold cursor-pointer">
+              Reset (10 mm)
+            </button>
+          </div>
+          <div class="grid grid-cols-4 gap-2">
+            <div>
+              <label class="block text-[10px] text-slate-500 text-center mb-0.5">Atas</label>
+              <input type="number" id="margin-top" value="10" min="2" max="40" step="1" onchange="updateSettings()" class="w-full text-center text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg py-1.5 focus:ring-2 focus:ring-[#0CA458] focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-500 text-center mb-0.5">Bawah</label>
+              <input type="number" id="margin-bottom" value="10" min="2" max="40" step="1" onchange="updateSettings()" class="w-full text-center text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg py-1.5 focus:ring-2 focus:ring-[#0CA458] focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-500 text-center mb-0.5">Kiri</label>
+              <input type="number" id="margin-left" value="10" min="2" max="40" step="1" onchange="updateSettings()" class="w-full text-center text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg py-1.5 focus:ring-2 focus:ring-[#0CA458] focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-500 text-center mb-0.5">Kanan</label>
+              <input type="number" id="margin-right" value="10" min="2" max="40" step="1" onchange="updateSettings()" class="w-full text-center text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg py-1.5 focus:ring-2 focus:ring-[#0CA458] focus:outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Jarak Antar Foto & Mode Pemotongan -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Jarak Potong / Gap (mm)</label>
+            <input type="number" id="photo-gap" value="3" min="0" max="20" step="0.5" onchange="updateSettings()" class="w-full text-xs font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-[#0CA458] focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">Mode Pemotongan</label>
+            <select id="fit-mode" onchange="updateSettings()" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded-xl px-2.5 py-2 focus:ring-2 focus:ring-[#0CA458] focus:outline-none">
+              <option value="cover">Cover (Crop Proporsional)</option>
+              <option value="contain">Contain (Utuh Tanpa Potong)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Garis Potong Tipis (Cut Guide) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Garis Potong Tipis (Cut Guide)</label>
+          <select id="border-style" onchange="updateSettings()" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:ring-2 focus:ring-[#0CA458] focus:outline-none">
+            <option value="gray">Garis Tipis Abu-abu (Panduan Gunting)</option>
+            <option value="emerald">Garis Tipis Hijau Zamrud</option>
+            <option value="black">Garis Tipis Hitam Tegas</option>
+            <option value="none">Tanpa Garis Tepi</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- 3. Pengubah Warna Background Instansi & Filter Nada Warna -->
+      <section class="bg-white rounded-2xl p-5 shadow-sm border border-[#0F5132]/15 space-y-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0F5132] via-[#0CA458] to-[#D4AF37]"></div>
+        <div class="flex items-center justify-between pt-0.5">
+          <h2 class="text-sm font-bold text-[#0F5132] flex items-center gap-2">
+            <span class="w-6 h-6 rounded-lg bg-[#0F5132] text-[#D4AF37] font-extrabold flex items-center justify-center text-xs shadow-xs">3</span>
+            Background & Filter Warna
+          </h2>
+          <button onclick="resetColorAndBg()" class="text-[11px] text-[#0CA458] hover:text-[#0F5132] font-semibold cursor-pointer">
+            Reset Semua
+          </button>
+        </div>
+
+        <!-- Warna Background Standar Instansi -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-semibold text-slate-700">Ganti Warna Background Instansi</label>
+            <span id="bg-mode-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Asli</span>
+          </div>
+
+          <!-- Grid Tombol Preset Warna Instansi -->
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="setGlobalBg('original', 'Asli')" data-bg-btn="original" class="bg-preset-btn flex items-center gap-2 p-2 rounded-xl border-2 border-[#0F5132] bg-[#ECFDF5] text-left transition cursor-pointer">
+              <span class="w-4 h-4 rounded-full border border-slate-400 bg-gradient-to-tr from-slate-300 via-white to-slate-200 shrink-0 flex items-center justify-center text-[8px] text-slate-600"><i class="fa-solid fa-ban"></i></span>
+              <span class="text-[11px] font-bold text-[#0F5132] leading-tight">Asli</span>
+            </button>
+
+            <button type="button" onclick="setGlobalBg('#DB1514', 'Merah Instansi')" data-bg-btn="#DB1514" class="bg-preset-btn flex items-center gap-2 p-2 rounded-xl border-2 border-slate-200 hover:border-[#0CA458] bg-white text-left transition cursor-pointer">
+              <span class="w-4 h-4 rounded-full border border-black/20 shrink-0" style="background:#DB1514;"></span>
+              <span class="text-[11px] font-semibold text-slate-700 leading-tight">Merah</span>
+            </button>
+
+            <button type="button" onclick="setGlobalBg('#0B5ED7', 'Biru Instansi')" data-bg-btn="#0B5ED7" class="bg-preset-btn flex items-center gap-2 p-2 rounded-xl border-2 border-slate-200 hover:border-[#0CA458] bg-white text-left transition cursor-pointer">
+              <span class="w-4 h-4 rounded-full border border-black/20 shrink-0" style="background:#0B5ED7;"></span>
+              <span class="text-[11px] font-semibold text-slate-700 leading-tight">Biru</span>
+            </button>
+
+            <button type="button" onclick="setGlobalBg('#FFFFFF', 'Putih Bersih')" data-bg-btn="#FFFFFF" class="bg-preset-btn flex items-center gap-2 p-2 rounded-xl border-2 border-slate-200 hover:border-[#0CA458] bg-white text-left transition cursor-pointer">
+              <span class="w-4 h-4 rounded-full border border-slate-300 shrink-0 bg-white"></span>
+              <span class="text-[11px] font-semibold text-slate-700 leading-tight">Putih</span>
+            </button>
+
+            <button type="button" onclick="setGlobalBg('#0F5132', 'Hijau Az-Zahro')" data-bg-btn="#0F5132" class="bg-preset-btn flex items-center gap-2 p-2 rounded-xl border-2 border-slate-200 hover:border-[#0CA458] bg-white text-left transition cursor-pointer">
+              <span class="w-4 h-4 rounded-full border border-[#D4AF37] shrink-0" style="background:#0F5132;"></span>
+              <span class="text-[11px] font-semibold text-slate-700 leading-tight">Hijau</span>
+            </button>
+
+            <button type="button" onclick="setGlobalBg('#E2E8F0', 'Abu-abu Terang')" data-bg-btn="#E2E8F0" class="bg-preset-btn flex items-center gap-2 p-2 rounded-xl border-2 border-slate-200 hover:border-[#0CA458] bg-white text-left transition cursor-pointer">
+              <span class="w-4 h-4 rounded-full border border-slate-300 shrink-0" style="background:#E2E8F0;"></span>
+              <span class="text-[11px] font-semibold text-slate-700 leading-tight">Abu-abu</span>
+            </button>
+          </div>
+
+          <!-- Pemilih Warna Custom (Hex) -->
+          <div class="mt-2 flex items-center justify-between gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+            <label for="custom-bg-picker" class="text-[11px] font-medium text-slate-600 cursor-pointer flex items-center gap-1.5">
+              <i class="fa-solid fa-eye-dropper text-[#0F5132]"></i>
+              <span>Warna Custom Instansi:</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <span id="custom-bg-hex" class="text-[11px] font-mono font-bold text-slate-700">#DB1514</span>
+              <input type="color" id="custom-bg-picker" value="#DB1514" onchange="handleCustomBgPicker(this.value)" class="w-7 h-7 rounded-lg border border-slate-300 cursor-pointer bg-transparent p-0" />
+            </div>
+          </div>
+
+          <!-- Slider Toleransi & Kehalusan Tepi (Muncul saat mode ganti background aktif) -->
+          <div id="bg-tuning-box" class="mt-3 p-3 rounded-xl bg-[#ECFDF5]/70 border border-[#0F5132]/15 space-y-2.5 hidden">
+            <div>
+              <div class="flex justify-between text-[11px] font-semibold text-[#0F5132] mb-1">
+                <span>Toleransi Deteksi Tepi</span>
+                <span id="bg-tolerance-val">28%</span>
+              </div>
+              <input type="range" id="bg-tolerance" min="5" max="75" value="28" oninput="updateBgTuning()" class="w-full accent-[#0F5132] cursor-pointer h-1.5 bg-emerald-200 rounded-lg" />
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] font-semibold text-[#0F5132] mb-1">
+                <span>Kehalusan Tepi (Feather)</span>
+                <span id="bg-feather-val">2 px</span>
+              </div>
+              <input type="range" id="bg-feather" min="0" max="6" value="2" oninput="updateBgTuning()" class="w-full accent-[#0CA458] cursor-pointer h-1.5 bg-emerald-200 rounded-lg" />
+            </div>
+            <p class="text-[10px] text-slate-500 leading-relaxed">
+              <i class="fa-solid fa-circle-info text-[#0CA458] mr-1"></i>Deteksi otomatis dimulai dari tepi foto. Cocok untuk foto berlatar polos/semi-polos.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pengubah Nada / Filter Warna Foto -->
+        <div class="pt-3 border-t border-slate-100">
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Filter Nada / Mode Warna Foto</label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+            <button type="button" onclick="setColorTone('normal')" data-tone-btn="normal" class="tone-preset-btn py-2 px-2.5 rounded-xl border-2 border-[#0F5132] bg-[#ECFDF5] text-[#0F5132] text-[11px] font-bold transition cursor-pointer text-center">
+              Warna Asli
+            </button>
+            <button type="button" onclick="setColorTone('bw')" data-tone-btn="bw" class="tone-preset-btn py-2 px-2.5 rounded-xl border-2 border-slate-200 bg-white hover:border-[#0CA458] text-slate-700 text-[11px] font-semibold transition cursor-pointer text-center">
+              Hitam Putih (B&W)
+            </button>
+            <button type="button" onclick="setColorTone('grayscale')" data-tone-btn="grayscale" class="tone-preset-btn py-2 px-2.5 rounded-xl border-2 border-slate-200 bg-white hover:border-[#0CA458] text-slate-700 text-[11px] font-semibold transition cursor-pointer text-center">
+              Abu-abu (Grey)
+            </button>
+            <button type="button" onclick="setColorTone('sepia')" data-tone-btn="sepia" class="tone-preset-btn py-2 px-2.5 rounded-xl border-2 border-slate-200 bg-white hover:border-[#0CA458] text-slate-700 text-[11px] font-semibold transition cursor-pointer text-center">
+              Sepia Klasik
+            </button>
+            <button type="button" onclick="setColorTone('vivid')" data-tone-btn="vivid" class="tone-preset-btn py-2 px-2.5 rounded-xl border-2 border-slate-200 bg-white hover:border-[#0CA458] text-slate-700 text-[11px] font-semibold transition cursor-pointer text-center col-span-2 sm:col-span-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-[#D4AF37] mr-1"></i>Cerah & Tajam (Cetak)
+            </button>
+          </div>
+
+          <!-- Slider Kecerahan & Kontras -->
+          <div class="grid grid-cols-2 gap-3 mt-3">
+            <div>
+              <div class="flex justify-between text-[11px] font-medium text-slate-600 mb-1">
+                <span>Kecerahan</span>
+                <span id="brightness-val" class="font-bold text-[#0F5132]">100%</span>
+              </div>
+              <input type="range" id="tone-brightness" min="60" max="150" value="100" oninput="updateToneSliders()" class="w-full accent-[#0F5132] cursor-pointer h-1.5 bg-slate-200 rounded-lg" />
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] font-medium text-slate-600 mb-1">
+                <span>Kontras</span>
+                <span id="contrast-val" class="font-bold text-[#0F5132]">100%</span>
+              </div>
+              <input type="range" id="tone-contrast" min="60" max="160" value="100" oninput="updateToneSliders()" class="w-full accent-[#0CA458] cursor-pointer h-1.5 bg-slate-200 rounded-lg" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- KOLOM KANAN: Pratinjau Lembar Kerja Real-Time (8 kolom pada layar besar) -->
+    <section class="lg:col-span-8 flex flex-col">
+      
+      <!-- Bar Informasi Pratinjau -->
+      <div class="bg-white rounded-2xl px-4 py-3 shadow-sm border border-[#0F5132]/15 mb-4 flex flex-wrap items-center justify-between gap-3 no-print">
+        <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold bg-[#0F5132] text-[#F4E5B2] px-3 py-1 rounded-lg border border-[#D4AF37]">
+            <i class="fa-solid fa-eye text-[#D4AF37]"></i> Pratinjau Lembar
+          </span>
+          <div class="text-xs text-slate-600">
+            Total: <strong id="stat-total-photos" class="text-[#0F5132]">0</strong> foto • 
+            <strong id="stat-total-pages" class="text-[#0F5132]">1</strong> halaman 
+            (<span id="stat-grid-info" class="text-slate-500">0 kolom × 0 baris/hal</span>)
+          </div>
+        </div>
+
+        <!-- Kontrol Zoom Pratinjau -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-500">Zoom:</span>
+          <button onclick="changeZoom(-0.1)" class="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#0F5132] border border-[#0F5132]/20 flex items-center justify-center text-xs cursor-pointer" title="Perkecil">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <span id="zoom-label" class="text-xs font-bold w-11 text-center text-[#0F5132]">100%</span>
+          <button onclick="changeZoom(0.1)" class="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#0F5132] border border-[#0F5132]/20 flex items-center justify-center text-xs cursor-pointer" title="Perbesar">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Area Kanvas Kertas (Scrollable) -->
+      <div id="preview-wrapper" class="flex-1 bg-[#E6ECE8] rounded-2xl border border-[#0F5132]/20 p-4 sm:p-8 overflow-auto flex flex-col items-center min-h-[580px]">
+        <div id="print-area" class="flex flex-col items-center gap-8 origin-top transition-transform duration-150">
+          <!-- Lembar-lembar kertas F4 / A4 akan dirender di sini -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Toast / Kotak Notifikasi Pengganti alert() -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Overlay Loading saat proses ekspor -->
+  <div id="loading-overlay" class="fixed inset-0 bg-[#0F5132]/60 backdrop-blur-xs z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl p-6 max-w-xs w-full mx-4 text-center shadow-2xl border-2 border-[#D4AF37]">
+      <div class="w-12 h-12 border-4 border-emerald-200 border-t-[#0F5132] rounded-full animate-spin mx-auto mb-3"></div>
+      <h3 id="loading-title" class="text-sm font-bold text-[#0F5132]">Memproses Dokumen...</h3>
+      <p id="loading-desc" class="text-xs text-slate-500 mt-1">Menyusun pas foto presisi ke lembar kerja</p>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * =========================================================================
+     * STATE APLIKASI & KONFIGURASI KERTAS (PORTAL AZ-ZAHRO)
+     * =========================================================================
+     */
+    const PAPER_DIMENSIONS = {
+      F4: { name: 'F4 (Folio)', widthMm: 215, heightMm: 330 }, // Standar F4 Administrasi Az-Zahro
+      A4: { name: 'A4', widthMm: 210, heightMm: 297 }
+    };
+
+    // State utama aplikasi (default F4)
+    let state = {
+      photos: [], // Array of { id, name, dataUrl, copies, imgElement, customBg, customTone }
+      paperSize: 'F4',
+      photoWidthMm: 27.9,
+      photoHeightMm: 38.1,
+      gapMm: 3,
+      marginTopMm: 10,
+      marginBottomMm: 10,
+      marginLeftMm: 10,
+      marginRightMm: 10,
+      fitMode: 'cover', // 'cover' | 'contain'
+      borderStyle: 'gray', // 'gray' | 'emerald' | 'black' | 'none'
+      zoomLevel: 1.0,
+      // Pengaturan Background & Filter Warna
+      globalBgColor: 'original', // 'original' atau kode hex '#DB1514', '#0B5ED7', '#FFFFFF', dll.
+      bgTolerance: 28,           // 5 - 75 (%)
+      bgFeather: 2,              // 0 - 6 (px)
+      colorTone: 'normal',       // 'normal' | 'bw' | 'grayscale' | 'sepia' | 'vivid'
+      brightness: 100,           // 60 - 150 (%)
+      contrast: 100              // 60 - 160 (%)
+    };
+
+    // Cache hasil pemrosesan gambar (untuk performa real-time di preview & daftar)
+    const processedPreviewCache = new Map();
+
+    /**
+     * =========================================================================
+     * INISIALISASI & EVENT LISTENERS
+     * =========================================================================
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      setupDragAndDrop();
+      autoAdjustInitialZoom();
+      renderAll();
+    });
+
+    window.addEventListener('resize', () => {
+      autoAdjustInitialZoom();
+    });
+
+    function autoAdjustInitialZoom() {
+      const wrapper = document.getElementById('preview-wrapper');
+      if (!wrapper) return;
+      const availableWidth = wrapper.clientWidth - 48;
+      // 1 mm di layar kira-kira 3.7795 px (96 DPI)
+      const paperPxWidth = PAPER_DIMENSIONS[state.paperSize].widthMm * 3.7795;
+      if (availableWidth < paperPxWidth) {
+        state.zoomLevel = Math.max(0.35, Number((availableWidth / paperPxWidth).toFixed(2)));
+      } else {
+        state.zoomLevel = 0.85;
+      }
+      applyZoom();
+    }
+
+    function setupDragAndDrop() {
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('file-input');
+
+      dropZone.addEventListener('click', () => fileInput.click());
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleFiles(e.target.files);
+          fileInput.value = '';
+        }
+      });
+
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-[#0CA458]', 'bg-[#ECFDF5]');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-[#0CA458]', 'bg-[#ECFDF5]');
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-[#0CA458]', 'bg-[#ECFDF5]');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          handleFiles(e.dataTransfer.files);
+        }
+      });
+    }
+
+    /**
+     * =========================================================================
+     * PENANGANAN UNGGAH FOTO & CONTOH FOTO DUMMY (LATAR MERAH & BIRU)
+     * =========================================================================
+     */
+    async function handleFiles(fileList) {
+      const validFiles = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+      if (validFiles.length === 0) {
+        showToast('Harap pilih file gambar (JPG, PNG, WEBP).', 'error');
+        return;
+      }
+
+      const defaultCopies = (state.photos.length === 0 && validFiles.length === 1) ? 6 : 1;
+
+      for (const file of validFiles) {
+        try {
+          const dataUrl = await readFileAsDataURL(file);
+          const imgElement = await loadImage(dataUrl);
+          state.photos.push({
+            id: 'photo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            name: file.name,
+            dataUrl,
+            copies: defaultCopies,
+            imgElement,
+            customBg: null,   // null = ikuti globalBgColor
+            customTone: null  // null = ikuti state.colorTone
+          });
+        } catch (err) {
+          console.error('Gagal membaca gambar:', file.name, err);
+        }
+      }
+
+      processedPreviewCache.clear();
+      showToast(`${validFiles.length} foto berhasil ditambahkan.`, 'success');
+      renderAll();
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    // Membuat contoh pas foto vektor (canvas) variasi latar merah & biru untuk pengujian instan
+    async function loadSamplePhotos() {
+      const sampleConfigs = [
+        { name: 'Santri_Putra_Merah.png', bg: '#dc2626', shirt: '#0F5132', collar: '#D4AF37', isHijab: false },
+        { name: 'Santri_Putri_Biru.png', bg: '#2563eb', shirt: '#ffffff', collar: '#0F5132', isHijab: true },
+        { name: 'Pengurus_Merah.png', bg: '#b91c1c', shirt: '#1e293b', collar: '#ffffff', isHijab: false }
+      ];
+
+      for (const cfg of sampleConfigs) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 354;  // ~30mm at 300dpi
+        canvas.height = 472; // ~40mm at 300dpi
+        const ctx = canvas.getContext('2d');
+
+        // Latar belakang pas foto
+        ctx.fillStyle = cfg.bg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Siluet bahu/seragam
+        ctx.fillStyle = cfg.shirt;
+        ctx.beginPath();
+        ctx.ellipse(177, 455, 130, 115, 0, Math.PI, 0);
+        ctx.fill();
+
+        if (cfg.isHijab) {
+          // Kerudung
+          ctx.fillStyle = '#f8fafc';
+          ctx.beginPath();
+          ctx.ellipse(177, 235, 92, 115, 0, 0, Math.PI * 2);
+          ctx.fill();
+          // Wajah
+          ctx.fillStyle = '#f1c27d';
+          ctx.beginPath();
+          ctx.ellipse(177, 215, 62, 78, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Leher
+          ctx.fillStyle = '#f1c27d';
+          ctx.fillRect(147, 275, 60, 75);
+          // Kepala
+          ctx.beginPath();
+          ctx.ellipse(177, 210, 68, 86, 0, 0, Math.PI * 2);
+          ctx.fill();
+          // Peci hitam khas santri
+          ctx.fillStyle = '#0f172a';
+          ctx.beginPath();
+          ctx.roundRect(110, 115, 134, 48, [16, 16, 4, 4]);
+          ctx.fill();
+        }
+
+        // Badge teks contoh
+        ctx.fillStyle = 'rgba(255,255,255,0.88)';
+        ctx.font = 'bold 17px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('CONTOH 3×4', 177, 40);
+
+        const dataUrl = canvas.toDataURL('image/png');
+        const imgElement = await loadImage(dataUrl);
+        state.photos.push({
+          id: 'sample_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+          name: cfg.name,
+          dataUrl,
+          copies: 4,
+          imgElement,
+          customBg: null,
+          customTone: null
+        });
+      }
+
+      processedPreviewCache.clear();
+      showToast('3 contoh pas foto Az-Zahro ditambahkan (masing-masing 4 salinan).', 'success');
+      renderAll();
+    }
+
+    /**
+     * =========================================================================
+     * KONTROL PENGATURAN BACKGROUND & FILTER NADA WARNA
+     * =========================================================================
+     */
+    function setGlobalBg(colorValue, labelText = '') {
+      state.globalBgColor = colorValue;
+      // Reset override per-foto saat pengguna memilih warna instansi secara massal
+      state.photos.forEach(p => { p.customBg = null; });
+      processedPreviewCache.clear();
+
+      // Perbarui gaya tombol aktif
+      document.querySelectorAll('.bg-preset-btn').forEach(btn => {
+        const isMatch = btn.getAttribute('data-bg-btn') === colorValue;
+        if (isMatch) {
+          btn.classList.remove('border-slate-200', 'bg-white');
+          btn.classList.add('border-[#0F5132]', 'bg-[#ECFDF5]');
+        } else {
+          btn.classList.remove('border-[#0F5132]', 'bg-[#ECFDF5]');
+          btn.classList.add('border-slate-200', 'bg-white');
+        }
+      });
+
+      const badge = document.getElementById('bg-mode-badge');
+      const tuningBox = document.getElementById('bg-tuning-box');
+      if (colorValue === 'original') {
+        badge.textContent = 'Asli';
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600';
+        tuningBox.classList.add('hidden');
+      } else {
+        badge.textContent = labelText || colorValue.toUpperCase();
+        badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0F5132] text-[#F4E5B2]';
+        tuningBox.classList.remove('hidden');
+      }
+
+      renderAll();
+    }
+
+    function handleCustomBgPicker(hexVal) {
+      document.getElementById('custom-bg-hex').textContent = hexVal.toUpperCase();
+      setGlobalBg(hexVal, 'Custom ' + hexVal.toUpperCase());
+    }
+
+    function updateBgTuning() {
+      state.bgTolerance = parseInt(document.getElementById('bg-tolerance').value, 10) || 28;
+      state.bgFeather = parseInt(document.getElementById('bg-feather').value, 10) || 0;
+      document.getElementById('bg-tolerance-val').textContent = `${state.bgTolerance}%`;
+      document.getElementById('bg-feather-val').textContent = `${state.bgFeather} px`;
+      processedPreviewCache.clear();
+      renderAll();
+    }
+
+    function setPhotoIndividualBg(id, bgVal) {
+      const photo = state.photos.find(p => p.id === id);
+      if (!photo) return;
+      photo.customBg = bgVal === 'global' ? null : bgVal;
+      processedPreviewCache.clear();
+      if (photo.customBg && photo.customBg !== 'original') {
+        document.getElementById('bg-tuning-box').classList.remove('hidden');
+      }
+      renderAll();
+    }
+
+    function setColorTone(tone) {
+      state.colorTone = tone;
+      state.photos.forEach(p => { p.customTone = null; });
+
+      // Atur preset kecerahan/kontras otomatis yang ideal untuk tiap mode
+      if (tone === 'bw') {
+        state.brightness = 104;
+        state.contrast = 128;
+      } else if (tone === 'vivid') {
+        state.brightness = 106;
+        state.contrast = 114;
+      } else {
+        state.brightness = 100;
+        state.contrast = 100;
+      }
+
+      document.getElementById('tone-brightness').value = state.brightness;
+      document.getElementById('tone-contrast').value = state.contrast;
+      document.getElementById('brightness-val').textContent = `${state.brightness}%`;
+      document.getElementById('contrast-val').textContent = `${state.contrast}%`;
+
+      document.querySelectorAll('.tone-preset-btn').forEach(btn => {
+        const isMatch = btn.getAttribute('data-tone-btn') === tone;
+        if (isMatch) {
+          btn.classList.remove('border-slate-200', 'bg-white', 'text-slate-700', 'font-semibold');
+          btn.classList.add('border-[#0F5132]', 'bg-[#ECFDF5]', 'text-[#0F5132]', 'font-bold');
+        } else {
+          btn.classList.remove('border-[#0F5132]', 'bg-[#ECFDF5]', 'text-[#0F5132]', 'font-bold');
+          btn.classList.add('border-slate-200', 'bg-white', 'text-slate-700', 'font-semibold');
+        }
+      });
+
+      processedPreviewCache.clear();
+      renderAll();
+    }
+
+    function setPhotoIndividualTone(id, toneVal) {
+      const photo = state.photos.find(p => p.id === id);
+      if (!photo) return;
+      photo.customTone = toneVal === 'global' ? null : toneVal;
+      processedPreviewCache.clear();
+      renderAll();
+    }
+
+    function updateToneSliders() {
+      state.brightness = parseInt(document.getElementById('tone-brightness').value, 10) || 100;
+      state.contrast = parseInt(document.getElementById('tone-contrast').value, 10) || 100;
+      document.getElementById('brightness-val').textContent = `${state.brightness}%`;
+      document.getElementById('contrast-val').textContent = `${state.contrast}%`;
+      processedPreviewCache.clear();
+      renderAll();
+    }
+
+    function resetColorAndBg() {
+      state.photos.forEach(p => {
+        p.customBg = null;
+        p.customTone = null;
+      });
+      setGlobalBg('original', 'Asli');
+      setColorTone('normal');
+      showToast('Pengaturan background dan filter warna dikembalikan ke asli.', 'info');
+    }
+
+    /**
+     * =========================================================================
+     * KONTROL PENGATURAN & MANIPULASI FOTO
+     * =========================================================================
+     */
+    function handlePresetChange() {
+      const preset = document.getElementById('photo-preset').value;
+      const customBox = document.getElementById('custom-size-box');
+      
+      if (preset === 'custom') {
+        customBox.classList.remove('hidden');
+      } else {
+        customBox.classList.add('hidden');
+        const [w, h] = preset.split('x').map(Number);
+        state.photoWidthMm = w;
+        state.photoHeightMm = h;
+      }
+      processedPreviewCache.clear();
+      renderPreview();
+    }
+
+    function resetMargins() {
+      document.getElementById('margin-top').value = 10;
+      document.getElementById('margin-bottom').value = 10;
+      document.getElementById('margin-left').value = 10;
+      document.getElementById('margin-right').value = 10;
+      updateSettings();
+      showToast('Margin kertas dikembalikan ke 10 mm di semua sisi.', 'info');
+    }
+
+    function updateSettings() {
+      const selectedPaper = document.querySelector('input[name="paperSize"]:checked');
+      if (selectedPaper) {
+        state.paperSize = selectedPaper.value;
+      }
+
+      const preset = document.getElementById('photo-preset').value;
+      if (preset === 'custom') {
+        state.photoWidthMm = Math.max(5, parseFloat(document.getElementById('custom-w').value) || 30);
+        state.photoHeightMm = Math.max(5, parseFloat(document.getElementById('custom-h').value) || 40);
+      }
+
+      state.marginTopMm = Math.max(0, parseFloat(document.getElementById('margin-top').value) || 0);
+      state.marginBottomMm = Math.max(0, parseFloat(document.getElementById('margin-bottom').value) || 0);
+      state.marginLeftMm = Math.max(0, parseFloat(document.getElementById('margin-left').value) || 0);
+      state.marginRightMm = Math.max(0, parseFloat(document.getElementById('margin-right').value) || 0);
+
+      state.gapMm = Math.max(0, parseFloat(document.getElementById('photo-gap').value) || 0);
+      state.fitMode = document.getElementById('fit-mode').value;
+      state.borderStyle = document.getElementById('border-style').value;
+
+      processedPreviewCache.clear();
+      renderPreview();
+    }
+
+    function updatePhotoCopies(id, deltaOrValue, isAbsolute = false) {
+      const photo = state.photos.find(p => p.id === id);
+      if (!photo) return;
+
+      if (isAbsolute) {
+        const val = parseInt(deltaOrValue, 10);
+        photo.copies = isNaN(val) || val < 1 ? 1 : Math.min(500, val);
+      } else {
+        photo.copies = Math.max(1, Math.min(500, photo.copies + deltaOrValue));
+      }
+      renderAll();
+    }
+
+    function removePhoto(id) {
+      state.photos = state.photos.filter(p => p.id !== id);
+      renderAll();
+    }
+
+    function applyBulkCopies() {
+      const count = parseInt(document.getElementById('bulk-copy-input').value, 10);
+      if (isNaN(count) || count < 1) {
+        showToast('Masukkan jumlah salinan minimal 1.', 'error');
+        return;
+      }
+      state.photos.forEach(p => p.copies = Math.min(500, count));
+      showToast(`Semua foto diatur menjadi ${count} salinan.`, 'success');
+      renderAll();
+    }
+
+    function clearAllPhotos() {
+      state.photos = [];
+      processedPreviewCache.clear();
+      renderAll();
+      showToast('Semua foto telah dihapus.', 'info');
+    }
+
+    function changeZoom(delta) {
+      state.zoomLevel = Math.min(1.5, Math.max(0.3, Number((state.zoomLevel + delta).toFixed(2))));
+      applyZoom();
+    }
+
+    function applyZoom() {
+      const printArea = document.getElementById('print-area');
+      const zoomLabel = document.getElementById('zoom-label');
+      if (printArea) {
+        printArea.style.transform = `scale(${state.zoomLevel})`;
+      }
+      if (zoomLabel) {
+        zoomLabel.textContent = `${Math.round(state.zoomLevel * 100)}%`;
+      }
+    }
+
+    /**
+     * =========================================================================
+     * PERHITUNGAN GRID & RENDER PRATINJAU REAL-TIME
+     * =========================================================================
+     */
+    function calculateLayout() {
+      const paper = PAPER_DIMENSIONS[state.paperSize];
+      const usableW = Math.max(10, paper.widthMm - (state.marginLeftMm + state.marginRightMm));
+      const usableH = Math.max(10, paper.heightMm - (state.marginTopMm + state.marginBottomMm));
+
+      // Hitung berapa kolom dan baris yang muat dalam area cetak
+      const cols = Math.max(1, Math.floor((usableW + state.gapMm) / (state.photoWidthMm + state.gapMm)));
+      const rows = Math.max(1, Math.floor((usableH + state.gapMm) / (state.photoHeightMm + state.gapMm)));
+      const perPage = cols * rows;
+
+      // Ratakan semua foto sesuai jumlah salinannya menjadi array linear
+      const expandedPhotos = [];
+      for (const p of state.photos) {
+        for (let i = 0; i < p.copies; i++) {
+          expandedPhotos.push(p);
+        }
+      }
+
+      // Bagi menjadi halaman-halaman
+      const pages = [];
+      if (expandedPhotos.length === 0) {
+        pages.push([]);
+      } else {
+        for (let i = 0; i < expandedPhotos.length; i += perPage) {
+          pages.push(expandedPhotos.slice(i, i + perPage));
+        }
+      }
+
+      return { paper, cols, rows, perPage, expandedPhotos, pages };
+    }
+
+    function renderAll() {
+      renderUploadedList();
+      renderPreview();
+    }
+
+    function renderUploadedList() {
+      const listEl = document.getElementById('uploaded-list');
+      const batchActions = document.getElementById('batch-actions');
+      const countLabel = document.getElementById('photo-count-label');
+
+      if (state.photos.length === 0) {
+        batchActions.classList.add('hidden');
+        listEl.innerHTML = '';
+        return;
+      }
+
+      batchActions.classList.remove('hidden');
+      countLabel.textContent = `${state.photos.length} file foto unik`;
+
+      listEl.innerHTML = state.photos.map(photo => {
+        const displaySrc = getPreviewPhotoDataUrl(photo);
+        const curBg = photo.customBg || 'global';
+        const curTone = photo.customTone || 'global';
+
+        return `
+        <div class="p-2.5 rounded-xl bg-[#ECFDF5]/60 border border-[#0F5132]/15 hover:border-[#0CA458] transition space-y-2">
+          <div class="flex items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <img src="${displaySrc}" alt="${photo.name}" class="w-9 h-12 object-cover rounded-md border border-[#D4AF37] shrink-0 bg-white" />
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-[#0F5132] truncate" title="${photo.name}">${photo.name}</p>
+                <p class="text-[11px] text-slate-500">${photo.imgElement.naturalWidth}×${photo.imgElement.naturalHeight} px</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-1 shrink-0">
+              <button onclick="updatePhotoCopies('${photo.id}', -1)" class="w-6 h-6 rounded-md bg-white border border-slate-300 hover:bg-emerald-50 text-[#0F5132] font-bold text-xs flex items-center justify-center cursor-pointer" title="Kurangi salinan">
+                -
+              </button>
+              <input type="number" value="${photo.copies}" min="1" max="500" onchange="updatePhotoCopies('${photo.id}', this.value, true)" class="w-11 text-center text-xs font-bold text-[#0F5132] bg-white border border-[#0F5132]/30 rounded-md py-0.5 focus:outline-none focus:border-[#0CA458]" title="Jumlah salinan" />
+              <button onclick="updatePhotoCopies('${photo.id}', 1)" class="w-6 h-6 rounded-md bg-white border border-slate-300 hover:bg-emerald-50 text-[#0F5132] font-bold text-xs flex items-center justify-center cursor-pointer" title="Tambah salinan">
+                +
+              </button>
+              <button onclick="removePhoto('${photo.id}')" class="w-6 h-6 rounded-md text-rose-600 hover:bg-rose-50 text-xs flex items-center justify-center ml-1 cursor-pointer" title="Hapus foto">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pengaturan Background & Filter Khusus per Foto -->
+          <div class="grid grid-cols-2 gap-1.5 pt-1.5 border-t border-[#0F5132]/10">
+            <select onchange="setPhotoIndividualBg('${photo.id}', this.value)" class="text-[10px] font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-[#0CA458]" title="Background khusus foto ini">
+              <option value="global" ${curBg === 'global' ? 'selected' : ''}>BG: Ikuti Global</option>
+              <option value="original" ${curBg === 'original' ? 'selected' : ''}>BG: Asli</option>
+              <option value="#DB1514" ${curBg === '#DB1514' ? 'selected' : ''}>BG: Merah</option>
+              <option value="#0B5ED7" ${curBg === '#0B5ED7' ? 'selected' : ''}>BG: Biru</option>
+              <option value="#FFFFFF" ${curBg === '#FFFFFF' ? 'selected' : ''}>BG: Putih</option>
+              <option value="#0F5132" ${curBg === '#0F5132' ? 'selected' : ''}>BG: Hijau</option>
+            </select>
+
+            <select onchange="setPhotoIndividualTone('${photo.id}', this.value)" class="text-[10px] font-semibold text-slate-700 bg-white border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-[#0CA458]" title="Filter warna khusus foto ini">
+              <option value="global" ${curTone === 'global' ? 'selected' : ''}>Warna: Global</option>
+              <option value="normal" ${curTone === 'normal' ? 'selected' : ''}>Full Color</option>
+              <option value="bw" ${curTone === 'bw' ? 'selected' : ''}>Hitam Putih</option>
+              <option value="grayscale" ${curTone === 'grayscale' ? 'selected' : ''}>Abu-abu (Grey)</option>
+              <option value="sepia" ${curTone === 'sepia' ? 'selected' : ''}>Sepia</option>
+              <option value="vivid" ${curTone === 'vivid' ? 'selected' : ''}>Cerah Tajam</option>
+            </select>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    /**
+     * =========================================================================
+     * RENDER PRATINJAU LEMBAR KERJA REAL-TIME (F4 / A4)
+     * =========================================================================
+     */
+    function renderPreview() {
+      const layout = calculateLayout();
+      const printArea = document.getElementById('print-area');
+
+      // Perbarui statistik header pratinjau
+      document.getElementById('stat-total-photos').textContent = layout.expandedPhotos.length;
+      document.getElementById('stat-total-pages').textContent = layout.pages.length;
+      document.getElementById('stat-grid-info').textContent = `${layout.cols} kolom × ${layout.rows} baris/hal`;
+
+      // Tentukan gaya garis tepi panduan potong
+      let borderCss = 'none';
+      if (state.borderStyle === 'gray') borderCss = '0.25mm solid #94a3b8';
+      else if (state.borderStyle === 'emerald') borderCss = '0.25mm solid #0F5132';
+      else if (state.borderStyle === 'black') borderCss = '0.25mm solid #0f172a';
+
+      const objectFitCss = state.fitMode === 'cover' ? 'cover' : 'contain';
+
+      printArea.innerHTML = layout.pages.map((pagePhotos, pageIndex) => {
+        let contentHtml = '';
+
+        if (pagePhotos.length === 0) {
+          contentHtml = `
+            <div class="w-full h-full border-2 border-dashed border-[#0F5132]/25 rounded-xl flex flex-col items-center justify-center text-center p-6 bg-[#ECFDF5]/30">
+              <div class="w-14 h-14 rounded-2xl bg-[#0F5132] text-[#D4AF37] flex items-center justify-center mb-3 shadow-sm">
+                <i class="fa-solid fa-images text-2xl"></i>
+              </div>
+              <p class="text-sm font-bold text-[#0F5132]">Lembar Kerja ${layout.paper.name} (${layout.paper.widthMm} × ${layout.paper.heightMm} mm)</p>
+              <p class="text-xs text-slate-500 mt-1 max-w-xs">Unggah pas foto di panel kiri atau klik <strong>+ Contoh Foto</strong> untuk melihat susunan otomatis 3×4 cm.</p>
+            </div>
+          `;
+        } else {
+          const itemsHtml = pagePhotos.map(p => {
+            const processedSrc = getPreviewPhotoDataUrl(p);
+            return `
+            <div style="
+              width: ${state.photoWidthMm}mm;
+              height: ${state.photoHeightMm}mm;
+              border: ${borderCss};
+              box-sizing: border-box;
+              overflow: hidden;
+              background: #ffffff;
+            ">
+              <img src="${processedSrc}" style="
+                width: 100%;
+                height: 100%;
+                object-fit: ${objectFitCss};
+                display: block;
+              " />
+            </div>
+          `;
+          }).join('');
+
+          contentHtml = `
+            <div style="
+              display: grid;
+              grid-template-columns: repeat(${layout.cols}, ${state.photoWidthMm}mm);
+              gap: ${state.gapMm}mm;
+              justify-content: start;
+              align-content: start;
+            ">
+              ${itemsHtml}
+            </div>
+          `;
+        }
+
+        return `
+          <div class="relative flex flex-col items-center">
+            <div class="text-[11px] font-bold text-[#0F5132] bg-white/90 px-3 py-0.5 rounded-full border border-[#D4AF37]/70 mb-2 shadow-2xs no-print">
+              Halaman ${pageIndex + 1} dari ${layout.pages.length} • ${layout.paper.name}
+            </div>
+            <div class="paper-sheet bg-white shadow-xl border border-slate-300 relative box-border" style="
+              width: ${layout.paper.widthMm}mm;
+              height: ${layout.paper.heightMm}mm;
+              padding-top: ${state.marginTopMm}mm;
+              padding-bottom: ${state.marginBottomMm}mm;
+              padding-left: ${state.marginLeftMm}mm;
+              padding-right: ${state.marginRightMm}mm;
+            ">
+              ${contentHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      applyZoom();
+    }
+
+    function dataUrlToUint8Array(dataUrl) {
+      const base64 = dataUrl.split(',')[1];
+      const binary = atob(base64);
+      const len = binary.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    /**
+     * =========================================================================
+     * ALGORITMA PENGUBAH BACKGROUND INSTANSI & FILTER NADA WARNA (CANVAS PIXEL)
+     * =========================================================================
+     */
+    function hexToRgb(hex) {
+      const clean = hex.replace('#', '');
+      const num = parseInt(clean.length === 3
+        ? clean.split('').map(c => c + c).join('')
+        : clean, 16);
+      return {
+        r: (num >> 16) & 255,
+        g: (num >> 8) & 255,
+        b: num & 255
+      };
+    }
+
+    /**
+     * Mengganti latar belakang foto berbasis Flood-Fill dari tepi bingkai +
+     * penghalusan tepi (feathering) dan menerapkan filter warna (B&W, Grey, Sepia, dll.)
+     */
+    function applyBackgroundAndTonePipeline(ctx, width, height, targetBgHex, toneMode) {
+      const hasBgChange = targetBgHex && targetBgHex !== 'original';
+      const hasToneChange = (toneMode && toneMode !== 'normal') || state.brightness !== 100 || state.contrast !== 100;
+
+      if (!hasBgChange && !hasToneChange) return;
+
+      const imgData = ctx.getImageData(0, 0, width, height);
+      const data = imgData.data;
+
+      // 1. PROSES PENGGANTIAN WARNA BACKGROUND (FLOOD-FILL TEPI + FEATHER)
+      if (hasBgChange) {
+        const targetRgb = hexToRgb(targetBgHex);
+        // Ambil sampel warna latar dari titik tepi atas, kiri, kanan (menghindari bagian bawah/bahu)
+        const sampleCoords = [
+          [2, 2], [width - 3, 2],
+          [Math.floor(width * 0.25), 2], [Math.floor(width * 0.75), 2],
+          [2, Math.floor(height * 0.2)], [width - 3, Math.floor(height * 0.2)],
+          [2, Math.floor(height * 0.45)], [width - 3, Math.floor(height * 0.45)]
+        ];
+
+        const seedColors = [];
+        for (const [sx, sy] of sampleCoords) {
+          if (sx >= 0 && sx < width && sy >= 0 && sy < height) {
+            const idx = (sy * width + sx) * 4;
+            // Lewati jika piksel sudah transparan penuh (PNG tanpa background)
+            if (data[idx + 3] > 20) {
+              seedColors.push([data[idx], data[idx + 1], data[idx + 2]]);
+            }
+          }
+        }
+
+        // Jarak warna maksimal berdasarkan slider toleransi (0 - 441.67)
+        const maxDist = (state.bgTolerance / 100) * 260;
+        const maxDistSq = maxDist * maxDist;
+
+        const isBgColor = (r, g, b, a) => {
+          if (a < 30) return true; // Area transparan PNG otomatis diganti warna background
+          for (let i = 0; i < seedColors.length; i++) {
+            const dr = r - seedColors[i][0];
+            const dg = g - seedColors[i][1];
+            const db = b - seedColors[i][2];
+            if ((dr * dr + dg * dg + db * db) <= maxDistSq) {
+              return true;
+            }
+          }
+          return false;
+        };
+
+        // Masking flood-fill BFS mulai dari seluruh tepi atas, kiri, dan kanan
+        const bgMask = new Uint8Array(width * height); // 0 = objek depan, 255 = background
+        const queue = new Int32Array(width * height);
+        let head = 0;
+        let tail = 0;
+
+        const tryEnqueue = (x, y) => {
+          const pos = y * width + x;
+          if (bgMask[pos] !== 0) return;
+          const idx = pos * 4;
+          if (isBgColor(data[idx], data[idx + 1], data[idx + 2], data[idx + 3])) {
+            bgMask[pos] = 255;
+            queue[tail++] = pos;
+          }
+        };
+
+        // Seed sepanjang tepi atas, kiri, dan kanan (hingga 85% tinggi agar tidak menembus kerah baju putih)
+        const maxSeedY = Math.floor(height * 0.88);
+        for (let x = 0; x < width; x++) {
+          tryEnqueue(x, 0);
+          tryEnqueue(x, 1);
+        }
+        for (let y = 0; y < maxSeedY; y++) {
+          tryEnqueue(0, y);
+          tryEnqueue(1, y);
+          tryEnqueue(width - 1, y);
+          tryEnqueue(width - 2, y);
+        }
+
+        while (head < tail) {
+          const pos = queue[head++];
+          const x = pos % width;
+          const y = (pos - x) / width;
+
+          if (x > 0) tryEnqueue(x - 1, y);
+          if (x < width - 1) tryEnqueue(x + 1, y);
+          if (y > 0) tryEnqueue(x, y - 1);
+          if (y < height - 1) tryEnqueue(x, y + 1);
+        }
+
+        // Penghalusan tepi (box blur ringan pada mask) agar transisi rambut/bahu lembut
+        let finalMask = bgMask;
+        const featherRadius = state.bgFeather;
+        if (featherRadius > 0) {
+          finalMask = new Uint8Array(width * height);
+          for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+              let sum = 0;
+              let count = 0;
+              for (let dy = -featherRadius; dy <= featherRadius; dy++) {
+                const ny = y + dy;
+                if (ny < 0 || ny >= height) continue;
+                for (let dx = -featherRadius; dx <= featherRadius; dx++) {
+                  const nx = x + dx;
+                  if (nx < 0 || nx >= width) continue;
+                  sum += bgMask[ny * width + nx];
+                  count++;
+                }
+              }
+              finalMask[y * width + x] = Math.round(sum / count);
+            }
+          }
+        }
+
+        // Terapkan warna background baru sesuai bobot alpha mask
+        for (let i = 0; i < width * height; i++) {
+          const alpha = finalMask[i] / 255;
+          if (alpha > 0) {
+            const idx = i * 4;
+            const origA = data[idx + 3] / 255;
+            if (origA < 0.15) {
+              data[idx] = targetRgb.r;
+              data[idx + 1] = targetRgb.g;
+              data[idx + 2] = targetRgb.b;
+              data[idx + 3] = 255;
+            } else {
+              data[idx] = Math.round(data[idx] * (1 - alpha) + targetRgb.r * alpha);
+              data[idx + 1] = Math.round(data[idx + 1] * (1 - alpha) + targetRgb.g * alpha);
+              data[idx + 2] = Math.round(data[idx + 2] * (1 - alpha) + targetRgb.b * alpha);
+              data[idx + 3] = 255;
+            }
+          }
+        }
+      }
+
+      // 2. PROSES FILTER NADA WARNA (HITAM PUTIH, GRAYSCALE, SEPIA, BRIGHTNESS, CONTRAST)
+      if (hasToneChange) {
+        const brightFactor = state.brightness / 100;
+        const contrastFactor = (259 * ((state.contrast - 100) * 2.55 + 255)) / (255 * (259 - (state.contrast - 100) * 2.55));
+
+        for (let i = 0; i < data.length; i += 4) {
+          let r = data[i];
+          let g = data[i + 1];
+          let b = data[i + 2];
+
+          // Kecerahan & Kontras
+          r = contrastFactor * (r * brightFactor - 128) + 128;
+          g = contrastFactor * (g * brightFactor - 128) + 128;
+          b = contrastFactor * (b * brightFactor - 128) + 128;
+
+          // Mode Warna
+          if (toneMode === 'grayscale') {
+            const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+            r = g = b = lum;
+          } else if (toneMode === 'bw') {
+            // Hitam Putih dengan kurva S-contrast tajam khas dokumen formal
+            let lum = 0.299 * r + 0.587 * g + 0.114 * b;
+            lum = lum < 128 ? (lum * 0.85) : Math.min(255, lum * 1.12);
+            r = g = b = lum;
+          } else if (toneMode === 'sepia') {
+            const sr = (r * 0.393) + (g * 0.769) + (b * 0.189);
+            const sg = (r * 0.349) + (g * 0.686) + (b * 0.168);
+            const sb = (r * 0.272) + (g * 0.534) + (b * 0.131);
+            r = sr; g = sg; b = sb;
+          } else if (toneMode === 'vivid') {
+            // Boost saturasi 18% agar warna seragam & wajah lebih segar saat dicetak
+            const avg = (r + g + b) / 3;
+            r = avg + (r - avg) * 1.18;
+            g = avg + (g - avg) * 1.18;
+            b = avg + (b - avg) * 1.18;
+          }
+
+          data[i] = Math.max(0, Math.min(255, Math.round(r)));
+          data[i + 1] = Math.max(0, Math.min(255, Math.round(g)));
+          data[i + 2] = Math.max(0, Math.min(255, Math.round(b)));
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    /**
+     * Versi ringan (150 DPI) dengan cache untuk tampilan Pratinjau Real-time agar super cepat
+     */
+    function getPreviewPhotoDataUrl(photo) {
+      const effectiveBg = photo.customBg || state.globalBgColor;
+      const effectiveTone = photo.customTone || state.colorTone;
+
+      // Jika tidak ada pemrosesan background/warna/crop khusus, langsung pakai dataUrl asli jika memungkinkan
+      const cacheKey = `${photo.id}_${effectiveBg}_${effectiveTone}_${state.bgTolerance}_${state.bgFeather}_${state.brightness}_${state.contrast}_${state.fitMode}_${state.photoWidthMm}x${state.photoHeightMm}`;
+      if (processedPreviewCache.has(cacheKey)) {
+        return processedPreviewCache.get(cacheKey);
+      }
+
+      const resultUrl = renderProcessedPhotoDataUrl(photo, 'image/jpeg', 0.9, 160);
+      processedPreviewCache.set(cacheKey, resultUrl);
+      return resultUrl;
+    }
+
+    /**
+     * =========================================================================
+     * PEMROSESAN GAMBAR PRESISI TINGGI (300 DPI) UNTUK EKSPOR WORD & PDF
+     * =========================================================================
+     */
+    function renderProcessedPhotoDataUrl(photo, format = 'image/jpeg', quality = 0.95, dpi = 300) {
+      const MM_TO_INCH = 1 / 25.4;
+      const targetW = Math.max(60, Math.round(state.photoWidthMm * MM_TO_INCH * dpi));
+      const targetH = Math.max(80, Math.round(state.photoHeightMm * MM_TO_INCH * dpi));
+
+      const effectiveBg = photo.customBg || state.globalBgColor;
+      const effectiveTone = photo.customTone || state.colorTone;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext('2d');
+
+      // Latar awal (jika user memilih background baru & mode contain, isi dengan warna target)
+      ctx.fillStyle = (effectiveBg && effectiveBg !== 'original') ? effectiveBg : '#ffffff';
+      ctx.fillRect(0, 0, targetW, targetH);
+
+      const img = photo.imgElement;
+      const srcW = img.naturalWidth;
+      const srcH = img.naturalHeight;
+      const targetRatio = targetW / targetH;
+      const srcRatio = srcW / srcH;
+
+      if (state.fitMode === 'cover') {
+        let cropW, cropH, cropX, cropY;
+
+        if (srcRatio > targetRatio) {
+          cropH = srcH;
+          cropW = srcH * targetRatio;
+          cropX = (srcW - cropW) / 2;
+          cropY = 0;
+        } else {
+          cropW = srcW;
+          cropH = srcW / targetRatio;
+          cropX = 0;
+          cropY = (srcH - cropH) * 0.25;
+        }
+
+        ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH);
+      } else {
+        // Contain (utuh proporsional di dalam bingkai 3x4)
+        let drawW, drawH, offsetX, offsetY;
+        if (srcRatio > targetRatio) {
+          drawW = targetW;
+          drawH = targetW / srcRatio;
+          offsetX = 0;
+          offsetY = (targetH - drawH) / 2;
+        } else {
+          drawH = targetH;
+          drawW = targetH * srcRatio;
+          offsetX = (targetW - drawW) / 2;
+          offsetY = 0;
+        }
+        ctx.drawImage(img, 0, 0, srcW, srcH, offsetX, offsetY, drawW, drawH);
+      }
+
+      // Jalankan pipeline pengganti warna background & filter nada warna
+      applyBackgroundAndTonePipeline(ctx, targetW, targetH, effectiveBg, effectiveTone);
+
+      return canvas.toDataURL(format, quality);
+    }
+
+    /**
+     * =========================================================================
+     * EKSPOR KE MICROSOFT WORD (.DOCX) MENGGUNAKAN DOCX.JS
+     * =========================================================================
+     */
+    async function exportToDocx() {
+      if (state.photos.length === 0) {
+        showToast('Unggah minimal 1 pas foto terlebih dahulu sebelum menyimpan Word.', 'error');
+        return;
+      }
+
+      if (typeof window.docx === 'undefined') {
+        showToast('Library docx.js gagal dimuat. Periksa koneksi internet Anda.', 'error');
+        return;
+      }
+
+      showLoading('Membuat File Word (.docx)...', 'Menyusun tabel pas foto presisi ukuran ' + state.paperSize);
+      await new Promise(r => setTimeout(r, 100));
+
+      try {
+        const {
+          Document, Packer, Paragraph, Table, TableRow, TableCell,
+          ImageRun, WidthType, BorderStyle, AlignmentType, VerticalAlign
+        } = window.docx;
+
+        const layout = calculateLayout();
+
+        // Konversi satuan milimeter ke Twips (1 mm = 56.692913 twips) & Pixel 96 DPI
+        const mmToTwips = (mm) => Math.round(mm * 56.692913);
+        const mmToPx96 = (mm) => Math.round(mm * 3.7795275591);
+
+        const pageWidthTwips = mmToTwips(layout.paper.widthMm);
+        const pageHeightTwips = mmToTwips(layout.paper.heightMm);
+
+        const imgWidthPx = mmToPx96(state.photoWidthMm);
+        const imgHeightPx = mmToPx96(state.photoHeightMm);
+
+        const cellWidthTwips = mmToTwips(state.photoWidthMm + state.gapMm);
+        const halfGapTwips = mmToTwips(state.gapMm / 2);
+
+        // Cache gambar yang sudah diproses
+        const processedCache = new Map();
+        for (const photo of state.photos) {
+          const processedDataUrl = renderProcessedPhotoDataUrl(photo, 'image/png');
+          processedCache.set(photo.id, dataUrlToUint8Array(processedDataUrl));
+        }
+
+        // Siapkan garis tepi jika dipilih
+        const hasBorder = state.borderStyle !== 'none';
+        let borderColor = '94A3B8';
+        if (state.borderStyle === 'black') borderColor = '0F172A';
+        if (state.borderStyle === 'emerald') borderColor = '0F5132';
+
+        const cellBorders = hasBorder ? {
+          top: { style: BorderStyle.SINGLE, size: 4, color: borderColor },
+          bottom: { style: BorderStyle.SINGLE, size: 4, color: borderColor },
+          left: { style: BorderStyle.SINGLE, size: 4, color: borderColor },
+          right: { style: BorderStyle.SINGLE, size: 4, color: borderColor },
+        } : {
+          top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          left: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          right: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+        };
+
+        const noBorders = {
+          top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          left: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+          right: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+        };
+
+        const docChildren = [];
+
+        layout.pages.forEach((pagePhotos, pageIdx) => {
+          const tableRows = [];
+          const totalRowsNeeded = Math.ceil(pagePhotos.length / layout.cols);
+
+          for (let r = 0; r < totalRowsNeeded; r++) {
+            const cells = [];
+
+            for (let c = 0; c < layout.cols; c++) {
+              const itemIndex = r * layout.cols + c;
+              const photoItem = pagePhotos[itemIndex];
+
+              if (photoItem) {
+                const imgBytes = processedCache.get(photoItem.id);
+
+                if (state.gapMm > 0 && hasBorder) {
+                  const innerTable = new Table({
+                    width: { size: mmToTwips(state.photoWidthMm), type: WidthType.DXA },
+                    rows: [
+                      new TableRow({
+                        children: [
+                          new TableCell({
+                            width: { size: mmToTwips(state.photoWidthMm), type: WidthType.DXA },
+                            borders: cellBorders,
+                            margins: { top: 0, bottom: 0, left: 0, right: 0 },
+                            children: [
+                              new Paragraph({
+                                alignment: AlignmentType.CENTER,
+                                spacing: { before: 0, after: 0, line: 240 },
+                                children: [
+                                  new ImageRun({
+                                    data: imgBytes,
+                                    transformation: {
+                                      width: imgWidthPx,
+                                      height: imgHeightPx,
+                                    },
+                                  }),
+                                ],
+                              }),
+                            ],
+                          }),
+                        ],
+                      }),
+                    ],
+                  });
+
+                  cells.push(
+                    new TableCell({
+                      width: { size: cellWidthTwips, type: WidthType.DXA },
+                      borders: noBorders,
+                      verticalAlign: VerticalAlign.TOP,
+                      margins: {
+                        top: halfGapTwips,
+                        bottom: halfGapTwips,
+                        left: halfGapTwips,
+                        right: halfGapTwips,
+                      },
+                      children: [innerTable],
+                    })
+                  );
+                } else {
+                  cells.push(
+                    new TableCell({
+                      width: { size: cellWidthTwips, type: WidthType.DXA },
+                      borders: state.gapMm === 0 ? cellBorders : noBorders,
+                      verticalAlign: VerticalAlign.TOP,
+                      margins: {
+                        top: halfGapTwips,
+                        bottom: halfGapTwips,
+                        left: halfGapTwips,
+                        right: halfGapTwips,
+                      },
+                      children: [
+                        new Paragraph({
+                          alignment: AlignmentType.CENTER,
+                          spacing: { before: 0, after: 0, line: 240 },
+                          children: [
+                            new ImageRun({
+                              data: imgBytes,
+                              transformation: {
+                                width: imgWidthPx,
+                                height: imgHeightPx,
+                              },
+                            }),
+                          ],
+                        }),
+                      ],
+                    })
+                  );
+                }
+              } else {
+                cells.push(
+                  new TableCell({
+                    width: { size: cellWidthTwips, type: WidthType.DXA },
+                    borders: noBorders,
+                    children: [new Paragraph({ spacing: { before: 0, after: 0 } })],
+                  })
+                );
+              }
+            }
+
+            tableRows.push(new TableRow({ children: cells, cantSplit: true }));
+          }
+
+          const pageTable = new Table({
+            width: { size: cellWidthTwips * layout.cols, type: WidthType.DXA },
+            rows: tableRows,
+          });
+
+          docChildren.push(pageTable);
+
+          if (pageIdx < layout.pages.length - 1) {
+            docChildren.push(
+              new Paragraph({
+                pageBreakBefore: true,
+                spacing: { before: 0, after: 0 },
+              })
+            );
+          }
+        });
+
+        const doc = new Document({
+          creator: 'Portal Az-Zahro - Generator Pas Foto 3x4',
+          title: `Pas Foto 3x4 - ${layout.paper.name}`,
+          description: 'Dokumen cetak pas foto ukuran 3x4 cm siap cetak',
+          sections: [
+            {
+              properties: {
+                page: {
+                  size: {
+                    width: pageWidthTwips,
+                    height: pageHeightTwips,
+                  },
+                  margin: {
+                    top: mmToTwips(state.marginTopMm),
+                    right: mmToTwips(state.marginRightMm),
+                    bottom: mmToTwips(state.marginBottomMm),
+                    left: mmToTwips(state.marginLeftMm),
+                  },
+                },
+              },
+              children: docChildren,
+            },
+          ],
+        });
+
+        const blob = await Packer.toBlob(doc);
+        const fileName = `Pas_Foto_3x4_${state.paperSize}_${layout.expandedPhotos.length}pcs.docx`;
+        downloadBlob(blob, fileName);
+
+        showToast(`File Word (${fileName}) berhasil diunduh!`, 'success');
+      } catch (error) {
+        console.error('Error generating DOCX:', error);
+        showToast('Terjadi kesalahan saat membuat file Word.', 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    /**
+     * =========================================================================
+     * EKSPOR KE PDF (.PDF) MENGGUNAKAN JSPDF (300 DPI PRESISI MM)
+     * =========================================================================
+     */
+    async function exportToPdf() {
+      if (state.photos.length === 0) {
+        showToast('Unggah minimal 1 pas foto terlebih dahulu sebelum menyimpan PDF.', 'error');
+        return;
+      }
+
+      if (typeof window.jspdf === 'undefined') {
+        showToast('Library jsPDF gagal dimuat. Periksa koneksi internet Anda.', 'error');
+        return;
+      }
+
+      showLoading('Membuat File PDF (.pdf)...', 'Merender pas foto resolusi tinggi 300 DPI');
+      await new Promise(r => setTimeout(r, 100));
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const layout = calculateLayout();
+
+        const doc = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: [layout.paper.widthMm, layout.paper.heightMm],
+          compress: true
+        });
+
+        const processedCache = new Map();
+        for (const photo of state.photos) {
+          processedCache.set(photo.id, renderProcessedPhotoDataUrl(photo, 'image/jpeg', 0.95));
+        }
+
+        layout.pages.forEach((pagePhotos, pageIdx) => {
+          if (pageIdx > 0) {
+            doc.addPage([layout.paper.widthMm, layout.paper.heightMm], 'portrait');
+          }
+
+          pagePhotos.forEach((photoItem, idx) => {
+            const col = idx % layout.cols;
+            const row = Math.floor(idx / layout.cols);
+
+            const x = state.marginLeftMm + col * (state.photoWidthMm + state.gapMm);
+            const y = state.marginTopMm + row * (state.photoHeightMm + state.gapMm);
+
+            const imgData = processedCache.get(photoItem.id);
+            doc.addImage(imgData, 'JPEG', x, y, state.photoWidthMm, state.photoHeightMm);
+
+            // Gambar garis tepi panduan potong jika diaktifkan
+            if (state.borderStyle !== 'none') {
+              if (state.borderStyle === 'black') {
+                doc.setDrawColor(15, 23, 42);
+                doc.setLineWidth(0.25);
+              } else if (state.borderStyle === 'emerald') {
+                doc.setDrawColor(15, 81, 50);
+                doc.setLineWidth(0.22);
+              } else {
+                doc.setDrawColor(148, 163, 184);
+                doc.setLineWidth(0.2);
+              }
+              doc.rect(x, y, state.photoWidthMm, state.photoHeightMm, 'S');
+            }
+          });
+        });
+
+        const fileName = `Pas_Foto_3x4_${state.paperSize}_${layout.expandedPhotos.length}pcs.pdf`;
+        doc.save(fileName);
+        showToast(`File PDF (${fileName}) berhasil diunduh!`, 'success');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+        showToast('Terjadi kesalahan saat membuat file PDF.', 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    /**
+     * =========================================================================
+     * CETAK LANGSUNG & UTILITAS UI (TOAST, DOWNLOAD, LOADING)
+     * =========================================================================
+     */
+    function triggerPrint() {
+      if (state.photos.length === 0) {
+        showToast('Unggah minimal 1 pas foto terlebih dahulu sebelum mencetak.', 'error');
+        return;
+      }
+      let styleTag = document.getElementById('dynamic-print-page');
+      if (!styleTag) {
+        styleTag = document.createElement('style');
+        styleTag.id = 'dynamic-print-page';
+        document.head.appendChild(styleTag);
+      }
+      const paper = PAPER_DIMENSIONS[state.paperSize];
+      styleTag.innerHTML = `@page { size: ${paper.widthMm}mm ${paper.heightMm}mm; margin: 0; }`;
+      
+      window.print();
+    }
+
+    function downloadBlob(blob, fileName) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+
+    function showLoading(title, desc) {
+      document.getElementById('loading-title').textContent = title;
+      document.getElementById('loading-desc').textContent = desc;
+      const overlay = document.getElementById('loading-overlay');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+    }
+
+    function hideLoading() {
+      const overlay = document.getElementById('loading-overlay');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: 'bg-[#0F5132] text-white border border-[#D4AF37]',
+        error: 'bg-rose-700 text-white border border-rose-400',
+        info: 'bg-slate-800 text-white border border-slate-600'
+      };
+      const icons = {
+        success: 'fa-circle-check text-[#D4AF37]',
+        error: 'fa-circle-exclamation text-rose-200',
+        info: 'fa-circle-info text-emerald-300'
+      };
+
+      toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl shadow-lg text-xs font-semibold flex items-center gap-2.5 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto max-w-sm`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icons[type] || icons.info} text-sm"></i>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
