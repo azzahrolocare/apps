@@ -19,6 +19,7 @@
     body {
       font-family: 'Arimo', sans-serif;
       background-color: #f1f5f9;
+      overflow-x: hidden;
     }
 
     /* Ukuran kanvas asli kartu: 856 x 540 px (rasio standar ID Card CR80) */
@@ -31,6 +32,7 @@
       box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.25);
       user-select: none;
       transform-origin: top left;
+      flex-shrink: 0;
     }
 
     /* Header Hijau */
@@ -332,118 +334,45 @@
     }
   </style>
 </head>
-<body class="min-h-screen text-slate-800">
+<body class="min-h-screen text-slate-800 flex flex-col">
 
   <!-- Navbar -->
   <header class="bg-[#066332] text-white shadow-md border-b-4 border-[#F29100]">
-    <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <img src="https://azzahro.web.id/media/logo/smp-azzahro.png" alt="Logo" class="w-10 h-10 object-contain bg-white/10 rounded-full p-0.5">
-        <div>
-          <h1 class="font-bold text-lg leading-tight">Generator Kartu Pelajar</h1>
-          <p class="text-xs text-emerald-100">SMP Islam Az-Zahro • Ponpes Salafiyah Syafi'iyah Az-Zahro</p>
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <img src="https://azzahro.web.id/media/logo/smp-azzahro.png" alt="Logo" class="w-10 h-10 shrink-0 object-contain bg-white/10 rounded-full p-0.5">
+        <div class="min-w-0">
+          <h1 class="font-bold text-base sm:text-lg leading-tight truncate">Generator Kartu Pelajar</h1>
+          <p class="text-[11px] sm:text-xs text-emerald-100 truncate">SMP Islam Az-Zahro • Ponpes Salafiyah Syafi'iyah Az-Zahro</p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="downloadCardPNG()" id="btnDownload" class="bg-[#F29100] hover:bg-amber-600 text-white font-semibold px-4 py-2 rounded-lg text-sm shadow flex items-center gap-2 transition cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
-          Unduh PNG (HD)
+      <div class="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
+        <button onclick="downloadCardPNG()" id="btnDownload" class="bg-[#F29100] hover:bg-amber-600 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm shadow flex items-center justify-center gap-1.5 sm:gap-2 transition cursor-pointer whitespace-nowrap">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+          <span>Unduh PNG (HD)</span>
         </button>
-        <button onclick="window.print()" class="bg-white/15 hover:bg-white/25 text-white font-semibold px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
-          Cetak Kartu
+        <button onclick="window.print()" class="bg-white/15 hover:bg-white/25 text-white font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 transition cursor-pointer whitespace-nowrap">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
+          <span>Cetak Kartu</span>
         </button>
       </div>
     </div>
   </header>
 
   <!-- Konten Utama -->
-  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-    
-    <!-- Kolom Kiri: Form Identitas & Foto -->
-    <section class="lg:col-span-4 bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
-      <div class="border-b border-slate-100 pb-2.5 flex items-center justify-between">
-        <h2 class="font-bold text-base text-[#066332]">Data Identitas Siswa</h2>
-        <button type="button" onclick="resetDefault()" class="text-xs text-slate-500 hover:text-[#066332] underline cursor-pointer">Reset Contoh</button>
-      </div>
+  <main class="w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start flex-1">
 
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Siswa</label>
-        <input type="text" id="inputNama" value="WULAN DARI" oninput="updateCard()" placeholder="Masukkan nama lengkap"
-          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Tempat / Tanggal Lahir</label>
-        <input type="text" id="inputTgl" value="30 Maret, 2013" oninput="updateCard()" placeholder="Contoh: 30 Maret, 2013"
-          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">NISN</label>
-        <input type="text" id="inputNisn" value="3139540746" oninput="updateCard()" placeholder="Masukkan 10 digit NISN"
-          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
-      </div>
-
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat Lengkap</label>
-        <textarea id="inputAlamat" rows="2" oninput="updateCard()" placeholder="Masukkan alamat siswa"
-          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]">Desa Purnama, Kec. Tegalampel, Kab. Bondowoso</textarea>
-      </div>
-
-      <!-- Upload Foto -->
-      <div class="pt-2 border-t border-slate-100">
-        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Foto Pelajar</label>
-        <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-emerald-300 rounded-lg cursor-pointer bg-emerald-50/40 hover:bg-emerald-50 transition">
-          <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center px-2">
-            <svg class="w-6 h-6 text-[#066332] mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            <p class="text-xs font-medium text-[#066332]">Klik untuk unggah foto siswa</p>
-            <p class="text-[11px] text-slate-400">JPG, PNG, WEBP</p>
-          </div>
-          <input type="file" id="inputPhoto" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)" />
-        </label>
-
-        <!-- Kontrol Zoom & Posisi Foto -->
-        <div class="mt-3 space-y-2 bg-slate-50 p-3 rounded-lg border border-slate-200">
-          <div class="flex items-center justify-between text-[11px] font-medium text-slate-600">
-            <span>Perbesar (Zoom): <strong id="zoomVal">100%</strong></span>
-            <button type="button" onclick="resetPhotoPosition()" class="text-[#066332] hover:underline font-semibold cursor-pointer">Reset Posisi</button>
-          </div>
-          <input type="range" id="photoZoom" min="0.5" max="3" step="0.02" value="1" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
-          
-          <div class="grid grid-cols-2 gap-2 pt-1">
-            <div>
-              <span class="block text-[11px] font-medium text-slate-600">Geser Kiri/Kanan</span>
-              <input type="range" id="photoX" min="-250" max="250" step="1" value="0" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
-            </div>
-            <div>
-              <span class="block text-[11px] font-medium text-slate-600">Geser Atas/Bawah</span>
-              <input type="range" id="photoY" min="-250" max="250" step="1" value="0" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
-            </div>
-          </div>
-          <p class="text-[10.5px] text-slate-500 pt-0.5 leading-snug">Tips: Geser atau cubit (pinch) langsung pada bingkai foto di kartu pratinjau.</p>
-        </div>
-      </div>
-
-      <!-- Info QR Code TTD Kepala Sekolah -->
-      <div class="pt-2 border-t border-slate-100">
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Link QR Code TTD Kepala Sekolah</label>
-        <input type="text" id="inputQrLink" value="https://drive.google.com/file/d/1pO8yn3v98Df1ePErHs7Kst7L2183KZCL/" oninput="generateQR()"
-          class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600 focus:outline-none focus:border-[#066332]" />
-      </div>
-    </section>
-
-    <!-- Kolom Kanan: Pratinjau Kartu Pelajar -->
-    <section class="lg:col-span-8 flex flex-col items-center">
-      <div class="w-full flex items-center justify-between mb-2 px-1">
-        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Pratinjau Langsung (Live Preview)</span>
-        <span class="text-xs text-slate-400">Ukuran Standar CR80 (85.6 × 54 mm)</span>
+    <!-- Pratinjau Kartu Pelajar (Urutan pertama di HP agar langsung terlihat, di kanan pada layar laptop) -->
+    <section class="w-full min-w-0 order-1 lg:order-2 lg:col-span-7 xl:col-span-8 flex flex-col">
+      <div class="w-full flex flex-wrap items-center justify-between gap-1 mb-2 px-1">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-600">Pratinjau Langsung (Live Preview)</span>
+        <span class="text-[11px] sm:text-xs text-slate-500">Ukuran Standar CR80 (85.6 × 54 mm)</span>
       </div>
 
       <!-- Container Responsif -->
-      <div id="previewContainer" class="w-full overflow-hidden flex justify-center items-start bg-slate-200/70 p-4 rounded-xl border border-slate-300">
+      <div id="previewContainer" class="w-full overflow-hidden flex justify-start items-start bg-slate-200/80 p-2.5 sm:p-4 rounded-xl border border-slate-300 shadow-inner">
         <div id="printArea" class="card-wrapper">
-          
+
           <!-- Header Kop Sekolah -->
           <div class="card-header">
             <img id="logoImg" src="https://azzahro.web.id/media/logo/smp-azzahro.png" alt="Logo SMP Islam Az-Zahro" class="header-logo" />
@@ -509,6 +438,79 @@
           </div>
 
         </div>
+      </div>
+    </section>
+
+    <!-- Form Identitas & Foto (Urutan kedua di HP, di kiri pada layar laptop) -->
+    <section class="w-full min-w-0 order-2 lg:order-1 lg:col-span-5 xl:col-span-4 bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 space-y-3.5 sm:space-y-4">
+      <div class="border-b border-slate-100 pb-2.5 flex items-center justify-between">
+        <h2 class="font-bold text-sm sm:text-base text-[#066332]">Data Identitas Siswa</h2>
+        <button type="button" onclick="resetDefault()" class="text-xs text-slate-500 hover:text-[#066332] underline cursor-pointer">Reset Contoh</button>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Siswa</label>
+        <input type="text" id="inputNama" value="WULAN DARI" oninput="updateCard()" placeholder="Masukkan nama lengkap"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Tempat / Tanggal Lahir</label>
+        <input type="text" id="inputTgl" value="30 Maret, 2013" oninput="updateCard()" placeholder="Contoh: 30 Maret, 2013"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">NISN</label>
+        <input type="text" id="inputNisn" value="3139540746" oninput="updateCard()" placeholder="Masukkan 10 digit NISN"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat Lengkap</label>
+        <textarea id="inputAlamat" rows="2" oninput="updateCard()" placeholder="Masukkan alamat siswa"
+          class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-[#066332] focus:ring-1 focus:ring-[#066332]">Desa Purnama, Kec. Tegalampel, Kab. Bondowoso</textarea>
+      </div>
+
+      <!-- Upload Foto -->
+      <div class="pt-2 border-t border-slate-100">
+        <label class="block text-xs font-semibold text-slate-600 mb-1.5">Foto Pelajar</label>
+        <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-emerald-300 rounded-lg cursor-pointer bg-emerald-50/40 hover:bg-emerald-50 transition">
+          <div class="flex flex-col items-center justify-center pt-2 pb-2 text-center px-2">
+            <svg class="w-6 h-6 text-[#066332] mb-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <p class="text-xs font-medium text-[#066332]">Klik untuk unggah foto siswa</p>
+            <p class="text-[11px] text-slate-400">JPG, PNG, WEBP</p>
+          </div>
+          <input type="file" id="inputPhoto" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)" />
+        </label>
+
+        <!-- Kontrol Zoom & Posisi Foto -->
+        <div class="mt-3 space-y-2.5 bg-slate-50 p-3 rounded-lg border border-slate-200">
+          <div class="flex items-center justify-between text-[11px] font-medium text-slate-600">
+            <span>Perbesar (Zoom): <strong id="zoomVal">100%</strong></span>
+            <button type="button" onclick="resetPhotoPosition()" class="text-[#066332] hover:underline font-semibold cursor-pointer">Reset Posisi</button>
+          </div>
+          <input type="range" id="photoZoom" min="0.5" max="3" step="0.02" value="1" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            <div>
+              <span class="block text-[11px] font-medium text-slate-600 mb-0.5">Geser Kiri/Kanan</span>
+              <input type="range" id="photoX" min="-250" max="250" step="1" value="0" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
+            </div>
+            <div>
+              <span class="block text-[11px] font-medium text-slate-600 mb-0.5">Geser Atas/Bawah</span>
+              <input type="range" id="photoY" min="-250" max="250" step="1" value="0" oninput="syncFromSliders()" class="w-full accent-[#066332] cursor-pointer">
+            </div>
+          </div>
+          <p class="text-[10.5px] text-slate-500 pt-0.5 leading-snug">Tips: Geser 1 jari atau cubit (pinch) 2 jari langsung pada foto di kartu pratinjau.</p>
+        </div>
+      </div>
+
+      <!-- Info QR Code TTD Kepala Sekolah -->
+      <div class="pt-2 border-t border-slate-100">
+        <label class="block text-xs font-semibold text-slate-600 mb-1">Link QR Code TTD Kepala Sekolah</label>
+        <input type="text" id="inputQrLink" value="https://drive.google.com/file/d/1pO8yn3v98Df1ePErHs7Kst7L2183KZCL/" oninput="generateQR()"
+          class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded text-xs text-slate-600 focus:outline-none focus:border-[#066332]" />
       </div>
     </section>
 
@@ -621,7 +623,6 @@
         };
       }
 
-      // --- TOUCH EVENTS (HP / Tablet / Layar Sentuh) ---
       hexFrame.addEventListener('touchstart', (e) => {
         if (e.touches.length === 1) {
           isDragging = true;
@@ -643,7 +644,7 @@
       }, { passive: false });
 
       hexFrame.addEventListener('touchmove', (e) => {
-        e.preventDefault(); // Mencegah halaman ikut ter-scroll saat menggeser/zoom foto
+        e.preventDefault();
         if (e.touches.length === 1 && isDragging) {
           const dx = (e.touches[0].clientX - startX) / currentCardScale;
           const dy = (e.touches[0].clientY - startY) / currentCardScale;
@@ -655,7 +656,6 @@
           const scaleFactor = currentDist / initialPinchDist;
           photoState.zoom = initialZoom * scaleFactor;
 
-          // Sekaligus mendukung geser halus saat 2 jari bergerak bersamaan
           const mid = getTouchMidpoint(e.touches[0], e.touches[1]);
           photoState.x = initialX + (mid.x - pinchMidX) / currentCardScale;
           photoState.y = initialY + (mid.y - pinchMidY) / currentCardScale;
@@ -665,7 +665,6 @@
 
       hexFrame.addEventListener('touchend', (e) => {
         if (e.touches.length === 1) {
-          // Jika salah satu jari diangkat setelah pinch, lanjut drag 1 jari dengan mulus
           isDragging = true;
           initialPinchDist = null;
           startX = e.touches[0].clientX;
@@ -678,7 +677,6 @@
         }
       });
 
-      // --- MOUSE EVENTS (Laptop / PC) ---
       hexFrame.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         isDragging = true;
@@ -701,7 +699,6 @@
         isDragging = false;
       });
 
-      // Zoom dengan scroll roda mouse pada bingkai foto
       hexFrame.addEventListener('wheel', (e) => {
         e.preventDefault();
         const delta = e.deltaY < 0 ? 0.08 : -0.08;
@@ -722,20 +719,33 @@
       generateQR();
     }
 
-    // Responsif skala kartu pada layar kecil
+    // Responsif skala kartu presisi di HP maupun laptop/desktop
     function fitCardPreview() {
       const container = document.getElementById('previewContainer');
       const card = document.getElementById('printArea');
-      const availableWidth = container.clientWidth - 32;
-      if (availableWidth < 856) {
-        currentCardScale = availableWidth / 856;
-        card.style.transform = `scale(${currentCardScale})`;
-        container.style.height = (540 * currentCardScale + 32) + 'px';
+      const styles = window.getComputedStyle(container);
+      const padLeft = parseFloat(styles.paddingLeft) || 0;
+      const padRight = parseFloat(styles.paddingRight) || 0;
+      const padTop = parseFloat(styles.paddingTop) || 0;
+      const padBottom = parseFloat(styles.paddingBottom) || 0;
+
+      const innerWidth = container.clientWidth - padLeft - padRight;
+      const cardW = 856;
+      const cardH = 540;
+
+      if (innerWidth > 0 && innerWidth < cardW) {
+        currentCardScale = innerWidth / cardW;
       } else {
         currentCardScale = 1;
-        card.style.transform = 'scale(1)';
-        container.style.height = 'auto';
       }
+
+      const scaledW = cardW * currentCardScale;
+      const scaledH = cardH * currentCardScale;
+      const offsetX = Math.max(0, (innerWidth - scaledW) / 2);
+
+      card.style.transform = `translateX(${offsetX}px) scale(${currentCardScale})`;
+      card.style.marginBottom = `-${cardH - scaledH}px`;
+      container.style.minHeight = `${scaledH + padTop + padBottom}px`;
     }
 
     // Helper: Memuat gambar dengan aman (mendukung fallback CORS)
@@ -777,12 +787,12 @@
     // Helper: Menggambar jalur segi enam pada Canvas
     function traceHexagon(ctx, cx, cy, w, h) {
       ctx.beginPath();
-      ctx.moveTo(cx, cy - h * 0.50);          // 50% 0%
-      ctx.lineTo(cx + w * 0.46, cy - h * 0.25); // 96% 25%
-      ctx.lineTo(cx + w * 0.46, cy + h * 0.25); // 96% 75%
-      ctx.lineTo(cx, cy + h * 0.50);          // 50% 100%
-      ctx.lineTo(cx - w * 0.46, cy + h * 0.25); // 4% 75%
-      ctx.lineTo(cx - w * 0.46, cy - h * 0.25); // 4% 25%
+      ctx.moveTo(cx, cy - h * 0.50);
+      ctx.lineTo(cx + w * 0.46, cy - h * 0.25);
+      ctx.lineTo(cx + w * 0.46, cy + h * 0.25);
+      ctx.lineTo(cx, cy + h * 0.50);
+      ctx.lineTo(cx - w * 0.46, cy + h * 0.25);
+      ctx.lineTo(cx - w * 0.46, cy - h * 0.25);
       ctx.closePath();
     }
 
@@ -798,7 +808,7 @@
 
         const W = 856;
         const H = 540;
-        const SCALE = 2; // Resolusi 2x HD (1712 x 1080)
+        const SCALE = 2;
 
         const canvas = document.createElement('canvas');
         canvas.width = W * SCALE;
